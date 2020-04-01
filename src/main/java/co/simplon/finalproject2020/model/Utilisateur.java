@@ -24,6 +24,8 @@ public class Utilisateur {
 	
 	@Column(name = "LPRENOM", nullable = false, length = 30)
 	private String prenom;
+	
+	
 
 	
 	/* GETTERS / SETTERS */

@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import co.simplon.finalproject2020.model.Demande;
+
 @Entity
 public class AttachedDocument {
 	
@@ -27,8 +29,9 @@ public class AttachedDocument {
 	 * @ManyToOne
 	 * @JoinColumn(name = "id_file", referencedColumnName = "id" )		// in that case use Demande Object instead of int.
 	 */
+	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fk_file_reference")
+	@JoinColumn(referencedColumnName = "ID_DEMANDE")
 	private Demande fileReference;			// référence du dossier auquel la piece jointe est associée
 	
 	@Lob // for Large Objects
@@ -43,7 +46,7 @@ public class AttachedDocument {
 	}
 
 	public AttachedDocument(Demande fileReference, byte[] content) {
-		this.fileReference = fileReference;
+		//this.fileReference = fileReference;
 		this.content = content;
 	}
 
@@ -51,7 +54,7 @@ public class AttachedDocument {
 		super();
 		this.name = name;
 		this.fileExtension = fileExtension;
-		this.fileReference = fileReference;
+		//this.fileReference = fileReference;
 		this.content = content;
 	}	
 	

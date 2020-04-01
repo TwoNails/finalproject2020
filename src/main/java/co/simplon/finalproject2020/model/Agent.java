@@ -19,7 +19,7 @@ import javax.persistence.TemporalType;
 public class Agent {
 	
 	@Id
-	@Column(name = "ID")
+	@Column(name = "ID_AGENT")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
@@ -32,29 +32,30 @@ public class Agent {
 	@Column(name = "LPRENOM", nullable = false, length = 30)
 	private String prenom;
 														/* m f (a?)*/
-	@Column(name = "CCIVILITE", nullable = false, length = 1)
+	@Column(name = "CCIVILITE", /*nullable = false,*/ length = 1)
 	private String civilite;
 	
 	@Column(name = "CGRADE", length = 6)
 	private String grade;
 	
-	@Column(name = "DNAISSANCE", nullable = false)
+	@Column(name = "DNAISSANCE"/*, nullable = false*/)
 	@Temporal(TemporalType.DATE)
 	private Date dateNaissance;
 	
-	@Column(name = "DENTREE_POSTE", nullable = false)
+	@Column(name = "DENTREE_POSTE"/*, nullable = false*/)
 	@Temporal(TemporalType.DATE)
 	private Date dateEntree;
 	
 	@Column(name = "NTELEPHONE", nullable = true, length = 16)
 	private String numTelephone;
 										/* the DTO should allow null here, but then build a mail nom.prenom@laposte.fr as default */
-	@Column(name = "LMAIL", nullable = false)
+	@Column(name = "LMAIL"/*, nullable = false*/)
 	private String adresseMail;
 	
+	// relations
 	@ManyToOne
-	@JoinColumn(name = "ID_UTILISATEUR", referencedColumnName = "ID")
-	private Utilisateur correpondant;
+	@JoinColumn(name = "ID_UTILISATEUR", referencedColumnName = "ID_AGENT")
+	private Agent correpondant;
 	
 	@ManyToOne
 	@JoinColumn(name = "CREGATE", referencedColumnName = "CREGATE")
@@ -137,10 +138,10 @@ public class Agent {
 		this.adresseMail = adresseMail;
 	}
 
-	public Utilisateur getCorrepondant() {
+	public Agent getCorrepondant() {
 		return correpondant;
 	}
-	public void setCorrepondant(Utilisateur correpondant) {
+	public void setCorrepondant(Agent correpondant) {
 		this.correpondant = correpondant;
 	}
 
