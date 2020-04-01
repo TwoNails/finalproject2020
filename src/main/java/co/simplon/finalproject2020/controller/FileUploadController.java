@@ -94,15 +94,15 @@ public class FileUploadController {
 		/* TESTS : SAVE FILE FROM HTTP REQUEST (POSTMAN) IN DATABASE */
 		
 		try {
-			AttachedDocument docToSave = new AttachedDocument(file.getOriginalFilename(), file.getContentType(), demandeId, file.getBytes());
+			//AttachedDocument docToSave = new AttachedDocument(file.getOriginalFilename(), file.getContentType(), demandeId, file.getBytes());
 			
-			attachedDocumentRepository.saveAndFlush(docToSave);
-		} catch (IOException e) {
+			//attachedDocumentRepository.saveAndFlush(docToSave);
+		} catch (/*IO*/Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		/* TESTS : READING DATABASE AND CREATING A COPY OF THE DOCUMENT FROM THE DATA FETCHED */
+		/* TESTS : READING DATABASE AND CREATING IN LOCAL FILES A COPY OF THE DOCUMENT FROM THE DATA FETCHED */
 		
 		Optional<AttachedDocument> copyFromDataBase = attachedDocumentRepository.findById(1);
 		if(copyFromDataBase.isPresent()) {

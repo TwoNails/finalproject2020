@@ -106,8 +106,8 @@ public class SandboxController {
 			
 		/* TESTS : SAVE PDF FROM LOCAL RESOURCES IN DATABASE */
 		
-		AttachedDocument testDocument = new AttachedDocument(355, bytesToStore);
-		attachedDocumentRepository.saveAndFlush(testDocument);
+		//AttachedDocument testDocument = new AttachedDocument(355, bytesToStore);
+		//attachedDocumentRepository.saveAndFlush(testDocument);
 		
 		/* TESTS : READING DATABASE AND CREATING A COPY OF THE DOCUMENT FROM THE DATA FETCHED */
 		
