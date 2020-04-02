@@ -12,4 +12,6 @@ public interface UtilisateurDAO extends DAO<Utilisateur>{
 
 	Optional<Utilisateur> findByNom(String nom);
 	
+	Optional<Utilisateur> findByMatricule(String matricule);
+	
 }

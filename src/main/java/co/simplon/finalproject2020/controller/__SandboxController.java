@@ -46,7 +46,7 @@ import co.simplon.finalproject2020.repository.__StudentRepository;
 @RestController
 @RequestMapping("/tests")
 @CrossOrigin(origins = "http://localhost:4200")
-public class SandboxController {
+public class __SandboxController {
 	
 	@Autowired
 	private __AttachedDocumentRepository attachedDocumentRepository;
@@ -80,7 +80,7 @@ public class SandboxController {
 				System.out.println("read " + readNum + " bytes, ");		// Kind of counterintuitive if you ask me wouldn't it make more sense to have this method  
 			}															// return something instead of being void ?
 		} catch (IOException e) {
-			System.out.println("Problème dans la classe SandboxController");
+			System.out.println("Problème dans la classe __SandboxController");
 		}
 		
 		byte[] bytesToStore = bos.toByteArray();

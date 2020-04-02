@@ -39,6 +39,9 @@ public class Demande {
 	@Column(name = "LORIGINE")
 	private OrigineDemande origineDemande;
 	
+	@Column(name = "OBJET")
+	private String objet;
+	
 	@Column(name = "LCOMMENT", nullable = true/*, columnDefinition = "CLOB"*/)
 	private String commentaire;
 	
@@ -82,12 +85,42 @@ public class Demande {
 	// CONSTRUCTORS
 	public Demande() {
 	}
-	public Demande(String numero, NatureTypeDemande natureDemande, OrigineDemande origineDemande,
-			String commentaire, LocalDate dateCreation, LocalDate dateAttribution, LocalDate dateCloture, LocalDate dateEcheance,
-			List<AttachedDocument> listeDocuments, TypeDemande type, Agent agent, Utilisateur responsable) {
+																					// contructeur utilisé par le service lors de la conversion du DTO
+	public Demande(NatureTypeDemande natureDemande, OrigineDemande origineDemande, String objet,
+			LocalDate dateCreation, LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type,
+			Agent agent) {
+		this.natureDemande = natureDemande;
+		this.origineDemande = origineDemande;
+		this.objet = objet;
+		this.dateCreation = dateCreation;
+		this.dateEcheance = dateEcheance;
+		this.listeDocuments = listeDocuments;
+		this.type = type;
+		this.agent = agent;
+	}
+																					// contructeur utilisé par le service lors de la conversion du DTO
+	public Demande(NatureTypeDemande natureDemande, OrigineDemande origineDemande, String objet,
+			LocalDate dateCreation, LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type,
+			Agent agent, Utilisateur responsable) {
+		this.natureDemande = natureDemande;
+		this.origineDemande = origineDemande;
+		this.objet = objet;
+		this.dateCreation = dateCreation;
+		this.dateEcheance = dateEcheance;
+		this.listeDocuments = listeDocuments;
+		this.type = type;
+		this.agent = agent;
+		this.responsable = responsable;
+	}
+
+	public Demande(String numero, NatureTypeDemande natureDemande, OrigineDemande origineDemande, String objet,
+			String commentaire, LocalDate dateCreation, LocalDate dateAttribution, LocalDate dateCloture,
+			LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type, Agent agent,
+			Utilisateur responsable) {
 		this.numero = numero;
 		this.natureDemande = natureDemande;
 		this.origineDemande = origineDemande;
+		this.objet = objet;
 		this.commentaire = commentaire;
 		this.dateCreation = dateCreation;
 		this.dateAttribution = dateAttribution;
@@ -114,11 +147,13 @@ public class Demande {
 		result = prime * result + ((listeDocuments == null) ? 0 : listeDocuments.hashCode());
 		result = prime * result + ((natureDemande == null) ? 0 : natureDemande.hashCode());
 		result = prime * result + ((numero == null) ? 0 : numero.hashCode());
+		result = prime * result + ((objet == null) ? 0 : objet.hashCode());
 		result = prime * result + ((origineDemande == null) ? 0 : origineDemande.hashCode());
 		result = prime * result + ((responsable == null) ? 0 : responsable.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -172,6 +207,11 @@ public class Demande {
 				return false;
 		} else if (!numero.equals(other.numero))
 			return false;
+		if (objet == null) {
+			if (other.objet != null)
+				return false;
+		} else if (!objet.equals(other.objet))
+			return false;
 		if (origineDemande != other.origineDemande)
 			return false;
 		if (responsable == null) {
@@ -186,15 +226,15 @@ public class Demande {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		return "Demande [id=" + id + ", numero=" + numero + ", natureDemande=" + natureDemande + ", origineDemande="
-				+ origineDemande + ", commentaire=" + commentaire + ", dateCreation=" + dateCreation
-				+ ", dateAttribution=" + dateAttribution + ", dateCloture=" + dateCloture + ", dateEcheance="
-				+ dateEcheance + ", listeDocuments=" + listeDocuments + ", type=" + type + ", agent=" + agent
-				+ ", responsable=" + responsable + "]";
-	}
-	
+				+ origineDemande + ", objet=" + objet + ", commentaire=" + commentaire + ", dateCreation="
+				+ dateCreation + ", dateAttribution=" + dateAttribution + ", dateCloture=" + dateCloture
+				+ ", dateEcheance=" + dateEcheance + ", listeDocuments=" + listeDocuments + ", type=" + type
+				+ ", agent=" + agent + ", responsable=" + responsable + "]";
+	}	
 	
 	// GETTERS / SETTERS
 	public int getId() {
@@ -223,6 +263,13 @@ public class Demande {
 	}
 	public void setOrigineDemande(OrigineDemande origineDemande) {
 		this.origineDemande = origineDemande;
+	}
+	
+	public String getObjet() {
+		return objet;
+	}
+	public void setObjet(String objet) {
+		this.objet = objet;
 	}
 
 	public String getCommentaire() {
