@@ -43,8 +43,8 @@ public class Demande {
 	private String commentaire;
 	
 	// dates :
-	//@Column(name = "DCREATION", nullable = false)		/* the DTO should allow null here. If we're instanciating, we initialize DCREATION as current date */
-	//@Temporal(TemporalType.DATE)
+	@Column(name = "DCREATION", nullable = false)		/* the DTO should allow null here. If we're instanciating, we initialize DCREATION as current date */
+	// @Temporal(TemporalType.DATE) apparently not ok with LocalDate (java.time) and rather used with Date (java.util)
 	private LocalDate dateCreation;
 	
 //	@Column(name = "DATTRIBUTION", nullable = false)

@@ -6,6 +6,6 @@ public interface UtilisateurService {
 	
 	public Utilisateur findById(int id) throws Exception;
 	
-	public Utilisateur saveUser(Utilisateur user) throws Exception;
+	// public Utilisateur saveUser(Utilisateur user) throws Exception;
 
 }

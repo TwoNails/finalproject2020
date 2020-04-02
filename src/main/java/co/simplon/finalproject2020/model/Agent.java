@@ -54,7 +54,7 @@ public class Agent {
 	
 	// relations
 	@ManyToOne
-	@JoinColumn(name = "ID_UTILISATEUR", referencedColumnName = "ID_AGENT")
+	@JoinColumn(name = "ID_UTILISATEUR", referencedColumnName = "ID_AGENT", nullable = true)
 	private Agent correpondant;
 	
 	@ManyToOne

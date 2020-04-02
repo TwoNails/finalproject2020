@@ -40,8 +40,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import co.simplon.finalproject2020.model.AttachedDocument;
 import co.simplon.finalproject2020.model.__test__Student;
-import co.simplon.finalproject2020.repository.AttachedDocumentRepository;
-import co.simplon.finalproject2020.repository.StudentRepository;
+import co.simplon.finalproject2020.repository.__AttachedDocumentRepository;
+import co.simplon.finalproject2020.repository.__StudentRepository;
 
 @RestController
 @RequestMapping("/tests")
@@ -49,10 +49,10 @@ import co.simplon.finalproject2020.repository.StudentRepository;
 public class SandboxController {
 	
 	@Autowired
-	private AttachedDocumentRepository attachedDocumentRepository;
+	private __AttachedDocumentRepository attachedDocumentRepository;
 	
 	@Autowired
-	private StudentRepository studentRepository;
+	private __StudentRepository studentRepository;
 	
 	@GetMapping("/pdf")		// reading a PDF, turning it into byte[], building a copy of the pdf from the byte[]. Then the same thing but with persistence.
 	public void testStoringFile() throws IOException {

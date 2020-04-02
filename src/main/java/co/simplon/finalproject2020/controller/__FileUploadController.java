@@ -30,31 +30,31 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import co.simplon.finalproject2020.model.AttachedDocument;
-import co.simplon.finalproject2020.repository.AttachedDocumentRepository;
+import co.simplon.finalproject2020.repository.__AttachedDocumentRepository;
 import co.simplon.finalproject2020.storage.StorageService;
 
 @RestController
 @RequestMapping("/upndownload")
 @CrossOrigin(origins = "http://localhost:4200")
-public class FileUploadController {
+public class __FileUploadController {
 	
 	// private final StorageService storageService;
 	
 	/*
 	@Autowired
-	public FileUploadController() {
+	public __FileUploadController() {
 		// TODO Auto-generated constructor stub
 	}
 	*/
 	
 	/*
 	@Autowired
-	public FileUploadController(StorageService storageService) {
+	public __FileUploadController(StorageService storageService) {
 		this.storageService = storageService;
 	}
 	*/
 	@Autowired
-	private AttachedDocumentRepository attachedDocumentRepository;
+	private __AttachedDocumentRepository attachedDocumentRepository;
 	
 	
 	@GetMapping("/{demandeId}")

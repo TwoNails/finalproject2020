@@ -1,11 +1,22 @@
 package co.simplon.finalproject2020.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import co.simplon.finalproject2020.model.enums.ProfilUtilisateur;
 
 @Entity
 @Table(name = "UTILISATEUR")
@@ -25,7 +36,13 @@ public class Utilisateur {
 	@Column(name = "LPRENOM", nullable = false, length = 30)
 	private String prenom;
 	
-	
+	@ElementCollection
+	@CollectionTable(
+			name = "tableProfilsUtilisateur",
+			joinColumns = @JoinColumn(name = "id_utilisateur")
+	)
+	@Column(name = "ProfilId")
+	private List<ProfilUtilisateur> roles = new ArrayList<>();
 
 	
 	/* GETTERS / SETTERS */
@@ -33,8 +50,16 @@ public class Utilisateur {
 	public int getId() {
 		return id;
 	}
+	
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public String getIdentifiantRH() {
+		return identifiantRH;
+	}
+	public void setIdentifiantRH(String identifiantRH) {
+		this.identifiantRH = identifiantRH;
 	}
 
 	public String getMatricule() {
@@ -56,6 +81,13 @@ public class Utilisateur {
 	}
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
+	}
+	
+	public List<ProfilUtilisateur> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<ProfilUtilisateur> roles) {
+		this.roles = roles;
 	}
 	
 	/* IMPORTANT OVERRIDES */

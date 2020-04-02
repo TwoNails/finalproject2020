@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import co.simplon.finalproject2020.model.AttachedDocument;
 
-public interface AttachedDocumentRepository extends JpaRepository<AttachedDocument, Integer> {
+public interface __AttachedDocumentRepository extends JpaRepository<AttachedDocument, Integer> {
 	
 	List<AttachedDocument> findByFileReferenceAndName(int fileReference, String name);
 	
