@@ -27,7 +27,7 @@ public class Utilisateur {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name = "CMATRICULE", nullable = false, length = 7)
+	@Column(name = "CMATRICULE", nullable = false, unique = true, length = 7)
 	private String identifiantRH;
 	
 	@Column(name = "LNOM", nullable = false, length = 40)

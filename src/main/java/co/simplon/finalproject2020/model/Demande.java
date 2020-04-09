@@ -3,6 +3,7 @@ package co.simplon.finalproject2020.model;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -67,7 +68,7 @@ public class Demande {
 	// relationships :
 	@OneToMany
 	@JoinColumn(name = "ID_DEMANDE")
-	private List<AttachedDocument> listeDocuments;
+	private Set<AttachedDocument> listeDocuments;
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_TYPE", referencedColumnName = "ID_TYPE_DEMANDE")
@@ -86,8 +87,8 @@ public class Demande {
 	public Demande() {
 	}
 																					// contructeur utilisé par le service lors de la conversion du DTO
-	public Demande(NatureTypeDemande natureDemande, OrigineDemande origineDemande, String objet,
-			LocalDate dateCreation, LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type,
+	public Demande(String numero, NatureTypeDemande natureDemande, OrigineDemande origineDemande, String objet,
+			LocalDate dateCreation, LocalDate dateEcheance, Set<AttachedDocument> listeDocuments, TypeDemande type,
 			Agent agent) {
 		this.natureDemande = natureDemande;
 		this.origineDemande = origineDemande;
@@ -99,8 +100,8 @@ public class Demande {
 		this.agent = agent;
 	}
 																					// contructeur utilisé par le service lors de la conversion du DTO
-	public Demande(NatureTypeDemande natureDemande, OrigineDemande origineDemande, String objet,
-			LocalDate dateCreation, LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type,
+	public Demande(String numero, NatureTypeDemande natureDemande, OrigineDemande origineDemande, String objet,
+			LocalDate dateCreation, LocalDate dateEcheance, Set<AttachedDocument> listeDocuments, TypeDemande type,
 			Agent agent, Utilisateur responsable) {
 		this.natureDemande = natureDemande;
 		this.origineDemande = origineDemande;
@@ -115,7 +116,7 @@ public class Demande {
 
 	public Demande(String numero, NatureTypeDemande natureDemande, OrigineDemande origineDemande, String objet,
 			String commentaire, LocalDate dateCreation, LocalDate dateAttribution, LocalDate dateCloture,
-			LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type, Agent agent,
+			LocalDate dateEcheance, Set<AttachedDocument> listeDocuments, TypeDemande type, Agent agent,
 			Utilisateur responsable) {
 		this.numero = numero;
 		this.natureDemande = natureDemande;
@@ -307,10 +308,10 @@ public class Demande {
 		this.dateEcheance = dateEcheance;
 	}
 
-	public List<AttachedDocument> getListeDocuments() {
+	public Set<AttachedDocument> getListeDocuments() {
 		return listeDocuments;
 	}
-	public void setListeDocuments(List<AttachedDocument> listeDocuments) {
+	public void setListeDocuments(Set<AttachedDocument> listeDocuments) {
 		this.listeDocuments = listeDocuments;
 	}
 

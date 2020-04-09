@@ -12,5 +12,7 @@ public interface AgentService {
 	public Agent saveAgent(Agent agent) throws Exception;
 	
 	public Agent updateAgent(Agent agent) throws Exception;
+	
+	// public Set<Agent>
 
 }

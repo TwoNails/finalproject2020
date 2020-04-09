@@ -25,20 +25,6 @@ public class DemandeServiceImpl implements DemandeService {
 	
 	public static Integer incrementNumBase = 0;
 	
-	private String generateNum(String type, String year) {
-		String numeroDemande = "";
-		numeroDemande += type;
-		numeroDemande += year;
-		
-		incrementNumBase++;
-		
-		for(int i=0; i < (4 - incrementNumBase.SIZE); i++) {
-			numeroDemande += "0";
-		}
-		numeroDemande += incrementNumBase.toString();
-		
-		return numeroDemande;
-	}
 	
 	@Autowired
 	private DemandeDAO demandeDAO;
@@ -74,23 +60,24 @@ public class DemandeServiceImpl implements DemandeService {
 
 	@Override
 	public Demande saveDemande(Demande demande) throws Exception {							// reçoit une nouvelle demande qui n'a pas encore de numéro attribué
-		Optional<Demande> optDemande = demandeDAO.findByNumero(demande.getNumero());		// Si la demande existe déj
-		return null;
+		demande.setNumero(generateNum(demande.getNatureDemande().getCode()));
+		return demandeDAO.saveAndFlush(demande);
 	}
 
 	@Override
 	public Demande dtoToDemande(DemandeDTO demandeDTO) throws Exception {
-		Optional<Agent> optAgent = agentDAO.findByIdentifiantRH(demandeDTO.getIDRH());
-		Optional<TypeDemande> optType = typeDemandeDAO.findByCode(demandeDTO.getLibelleType());							// a priori ici on devrait pouvoir se passer d'optionnel
+		Optional<Agent> optAgent = agentDAO.findByIdentifiantRH(demandeDTO.getIdrh());
+		Optional<TypeDemande> optType = typeDemandeDAO.findByCode(demandeDTO.getCodeType());							// a priori ici on devrait pouvoir se passer d'optionnel
 		
 		if(!demandeDTO.getMatriculeGestionnaire().equals("")) {
-			Optional<Utilisateur> optUtilisateur = utilisateurDAO.findByMatricule(demandeDTO.getMatriculeGestionnaire());
+			Optional<Utilisateur> optUtilisateur = utilisateurDAO.findByIdentifiantRH(demandeDTO.getMatriculeGestionnaire());
 			if(optAgent.isPresent() && optType.isPresent() && optUtilisateur.isPresent()) {
 				
 				TypeDemande type = optType.get();
 				LocalDate dateEcheance = LocalDate.now().plusDays((long)type.getEcheance());
 				
-				return new Demande	(	optType.get().getNature(), 
+				return new Demande	(	generateNum(type.getNature().getCode()),
+										type.getNature(), 
 										OrigineDemande.valueOf(demandeDTO.getOrigine()),
 										demandeDTO.getObjet(), 
 										LocalDate.now(), 
@@ -108,7 +95,8 @@ public class DemandeServiceImpl implements DemandeService {
 				TypeDemande type = optType.get();
 				LocalDate dateEcheance = LocalDate.now().plusDays((long)type.getEcheance());
 				
-				return new Demande	(	optType.get().getNature(), 
+				return new Demande	(	generateNum(type.getNature().getCode()),
+										type.getNature(), 
 										OrigineDemande.valueOf(demandeDTO.getOrigine()),
 										demandeDTO.getObjet(), 
 										LocalDate.now(), 
@@ -116,14 +104,27 @@ public class DemandeServiceImpl implements DemandeService {
 										demandeDTO.getListeDocuments(), 
 										type, 
 										optAgent.get());
-			}	
+			} else {
+				throw new Exception("Agent introuvable en base");
+			}
 		}
-
-
+	}
+	
+	public String generateNum(String nature) {
+		String numeroDemande = "";
+		String year = Integer.toString(LocalDate.now().getYear()).substring(2);
+		numeroDemande += nature;
+		numeroDemande += year;
 		
+		incrementNumBase++;
+		int numBaseDigits = (int) (Math.log10(incrementNumBase) +1);
 		
-		//Demande newDemande
-		return null;
+		for(int i=0; i < (4 - numBaseDigits); i++) {
+			numeroDemande += "0";
+		}
+		numeroDemande += incrementNumBase.toString();
+		
+		return numeroDemande;
 	}
 
 	
