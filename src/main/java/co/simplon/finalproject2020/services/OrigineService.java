@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface OrigineService {
 
-	public List<String> findAll();
+	public List<String> findAllNotAuto();
 }

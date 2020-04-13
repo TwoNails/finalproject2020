@@ -31,7 +31,7 @@ public class AttachedDocument {
 	 */
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(referencedColumnName = "ID_DEMANDE")
+	@JoinColumn(referencedColumnName = "NNUMERO")
 	private Demande fileReference;			// référence du dossier auquel la piece jointe est associée
 	
 	@Lob // for Large Objects
@@ -46,15 +46,14 @@ public class AttachedDocument {
 	}
 
 	public AttachedDocument(Demande fileReference, byte[] content) {
-		//this.fileReference = fileReference;
+		this.fileReference = fileReference;
 		this.content = content;
 	}
 
 	public AttachedDocument(String name, String fileExtension, Demande fileReference, byte[] content) {
-		super();
 		this.name = name;
 		this.fileExtension = fileExtension;
-		//this.fileReference = fileReference;
+		this.fileReference = fileReference;
 		this.content = content;
 	}	
 	

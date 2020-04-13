@@ -94,9 +94,9 @@ public class __FileUploadController {
 		/* TESTS : SAVE FILE FROM HTTP REQUEST (POSTMAN) IN DATABASE */
 		
 		try {
-			//AttachedDocument docToSave = new AttachedDocument(file.getOriginalFilename(), file.getContentType(), demandeId, file.getBytes());
+			// AttachedDocument docToSave = new AttachedDocument(file.getOriginalFilename(), file.getContentType(), demandeId, file.getBytes());
 			
-			//attachedDocumentRepository.saveAndFlush(docToSave);
+			// attachedDocumentRepository.saveAndFlush(docToSave);
 		} catch (/*IO*/Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

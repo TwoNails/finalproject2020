@@ -17,7 +17,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import co.simplon.finalproject2020.model.enums.NatureTypeDemande;
-import co.simplon.finalproject2020.model.enums.OrigineDemande;
 import co.simplon.finalproject2020.model.AttachedDocument;
 
 @Entity
@@ -32,14 +31,6 @@ public class Demande {
 	@Column(name = "NNUMERO", nullable = false, length = 8)
 	private String numero;
 	
-	
-	// enums :
-	@Column(name = "CNATURE_DEMANDE")										
-	private NatureTypeDemande natureDemande;
-	
-	@Column(name = "LORIGINE")
-	private OrigineDemande origineDemande;
-	
 	@Column(name = "OBJET")
 	private String objet;
 	
@@ -52,34 +43,39 @@ public class Demande {
 	private LocalDate dateCreation;
 	
 //	@Column(name = "DATTRIBUTION", nullable = false)
-//	@Temporal(TemporalType.DATE)
 	private LocalDate dateAttribution;
 	
 //	@Column(name = "DCLOTURE", nullable = false)
-//	@Temporal(TemporalType.DATE)
 	private LocalDate dateCloture;
 
 	/* Will be calculated at creation, its value will depend of the demand's nature */
 //	@Column(name = "DECHEANCE", nullable = true)
-//	@Temporal(TemporalType.DATE)
 	private LocalDate dateEcheance;
 	
 	
 	// relationships :
 	@OneToMany
 	@JoinColumn(name = "ID_DEMANDE")
-	private Set<AttachedDocument> listeDocuments;
+	private List<AttachedDocument> listeDocuments;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_ORIGINE")
+	private Origine origine;
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_TYPE", referencedColumnName = "ID_TYPE_DEMANDE")
 	private TypeDemande type;
 	
 	@ManyToOne
+	@JoinColumn(name = "ID_NATURE", referencedColumnName = "ID_NATURE")
+	private Nature nature;
+	
+	@ManyToOne
 	@JoinColumn(name = "ID_AGENT", referencedColumnName = "ID_AGENT")
 	private Agent agent;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_UTILISATEUR", referencedColumnName = "ID")
+	@JoinColumn(name = "IDRH_GESTIONNAIRE", referencedColumnName = "CMATRICULE")
 	private Utilisateur responsable;
 	
 	
@@ -87,40 +83,39 @@ public class Demande {
 	public Demande() {
 	}
 																					// contructeur utilisé par le service lors de la conversion du DTO
-	public Demande(String numero, NatureTypeDemande natureDemande, OrigineDemande origineDemande, String objet,
-			LocalDate dateCreation, LocalDate dateEcheance, Set<AttachedDocument> listeDocuments, TypeDemande type,
-			Agent agent) {
-		this.natureDemande = natureDemande;
-		this.origineDemande = origineDemande;
+	public Demande(String numero, Nature nature, String objet,
+			LocalDate dateCreation, LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type,
+			Origine origine, Agent agent) {
+		this.nature = nature;
 		this.objet = objet;
 		this.dateCreation = dateCreation;
 		this.dateEcheance = dateEcheance;
 		this.listeDocuments = listeDocuments;
 		this.type = type;
+		this.origine = origine;
 		this.agent = agent;
 	}
 																					// contructeur utilisé par le service lors de la conversion du DTO
-	public Demande(String numero, NatureTypeDemande natureDemande, OrigineDemande origineDemande, String objet,
-			LocalDate dateCreation, LocalDate dateEcheance, Set<AttachedDocument> listeDocuments, TypeDemande type,
-			Agent agent, Utilisateur responsable) {
-		this.natureDemande = natureDemande;
-		this.origineDemande = origineDemande;
+	public Demande(String numero, Nature nature, String objet,
+			LocalDate dateCreation, LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type,
+			Origine origine, Agent agent, Utilisateur responsable) {
+		this.nature = nature;
 		this.objet = objet;
 		this.dateCreation = dateCreation;
 		this.dateEcheance = dateEcheance;
 		this.listeDocuments = listeDocuments;
 		this.type = type;
+		this.origine = origine;
 		this.agent = agent;
 		this.responsable = responsable;
 	}
 
-	public Demande(String numero, NatureTypeDemande natureDemande, OrigineDemande origineDemande, String objet,
+	public Demande(String numero, Nature nature, String objet,
 			String commentaire, LocalDate dateCreation, LocalDate dateAttribution, LocalDate dateCloture,
-			LocalDate dateEcheance, Set<AttachedDocument> listeDocuments, TypeDemande type, Agent agent,
+			LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type, Origine origine, Agent agent,
 			Utilisateur responsable) {
 		this.numero = numero;
-		this.natureDemande = natureDemande;
-		this.origineDemande = origineDemande;
+		this.nature = nature;
 		this.objet = objet;
 		this.commentaire = commentaire;
 		this.dateCreation = dateCreation;
@@ -129,6 +124,7 @@ public class Demande {
 		this.dateEcheance = dateEcheance;
 		this.listeDocuments = listeDocuments;
 		this.type = type;
+		this.origine = origine;
 		this.agent = agent;
 		this.responsable = responsable;
 	}
@@ -146,10 +142,10 @@ public class Demande {
 		result = prime * result + ((dateEcheance == null) ? 0 : dateEcheance.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((listeDocuments == null) ? 0 : listeDocuments.hashCode());
-		result = prime * result + ((natureDemande == null) ? 0 : natureDemande.hashCode());
+		result = prime * result + ((nature == null) ? 0 : nature.hashCode());
 		result = prime * result + ((numero == null) ? 0 : numero.hashCode());
 		result = prime * result + ((objet == null) ? 0 : objet.hashCode());
-		result = prime * result + ((origineDemande == null) ? 0 : origineDemande.hashCode());
+		result = prime * result + ((origine == null) ? 0 : origine.hashCode());
 		result = prime * result + ((responsable == null) ? 0 : responsable.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
@@ -201,7 +197,7 @@ public class Demande {
 				return false;
 		} else if (!listeDocuments.equals(other.listeDocuments))
 			return false;
-		if (natureDemande != other.natureDemande)
+		if (nature != other.nature)
 			return false;
 		if (numero == null) {
 			if (other.numero != null)
@@ -213,7 +209,7 @@ public class Demande {
 				return false;
 		} else if (!objet.equals(other.objet))
 			return false;
-		if (origineDemande != other.origineDemande)
+		if (origine != other.origine)
 			return false;
 		if (responsable == null) {
 			if (other.responsable != null)
@@ -230,8 +226,8 @@ public class Demande {
 
 	@Override
 	public String toString() {
-		return "Demande [id=" + id + ", numero=" + numero + ", natureDemande=" + natureDemande + ", origineDemande="
-				+ origineDemande + ", objet=" + objet + ", commentaire=" + commentaire + ", dateCreation="
+		return "Demande [id=" + id + ", numero=" + numero + ", natureDemande=" + nature + ", origineDemande="
+				+ origine + ", objet=" + objet + ", commentaire=" + commentaire + ", dateCreation="
 				+ dateCreation + ", dateAttribution=" + dateAttribution + ", dateCloture=" + dateCloture
 				+ ", dateEcheance=" + dateEcheance + ", listeDocuments=" + listeDocuments + ", type=" + type
 				+ ", agent=" + agent + ", responsable=" + responsable + "]";
@@ -252,18 +248,18 @@ public class Demande {
 		this.numero = numero;
 	}
 
-	public NatureTypeDemande getNatureDemande() {
-		return natureDemande;
+	public Nature getNature() {
+		return nature;
 	}
-	public void setNatureDemande(NatureTypeDemande natureDemande) {
-		this.natureDemande = natureDemande;
+	public void setNature(Nature nature) {
+		this.nature = nature;
 	}
 
-	public OrigineDemande getOrigineDemande() {
-		return origineDemande;
+	public Origine getOrigine() {
+		return origine;
 	}
-	public void setOrigineDemande(OrigineDemande origineDemande) {
-		this.origineDemande = origineDemande;
+	public void setOrigineDemande(Origine origine) {
+		this.origine = origine;
 	}
 	
 	public String getObjet() {
@@ -308,10 +304,10 @@ public class Demande {
 		this.dateEcheance = dateEcheance;
 	}
 
-	public Set<AttachedDocument> getListeDocuments() {
+	public List<AttachedDocument> getListeDocuments() {
 		return listeDocuments;
 	}
-	public void setListeDocuments(Set<AttachedDocument> listeDocuments) {
+	public void setListeDocuments(List<AttachedDocument> listeDocuments) {
 		this.listeDocuments = listeDocuments;
 	}
 

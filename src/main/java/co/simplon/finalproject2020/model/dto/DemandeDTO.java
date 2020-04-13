@@ -22,7 +22,7 @@ public class DemandeDTO {
 		private String matriculeGestionnaire;
 		
 		// liste des pieces jointes à la demande
-		private Set<AttachedDocument> listeDocuments;
+		// private List<AttachedDocument> listeDocuments;
 
 		
 		
@@ -30,14 +30,14 @@ public class DemandeDTO {
 		public DemandeDTO() {
 		}
 
-		public DemandeDTO(String idrh, String libelleType, String objet, String origine, String matriculeGestionnaire,
-				Set<AttachedDocument> listeDocuments) {
+		public DemandeDTO(String idrh, String libelleType, String objet, String origine, String matriculeGestionnaire/*,
+				List<AttachedDocument> listeDocuments*/) {
 			this.idrh = idrh;
 			this.codeType = libelleType;
 			this.objet = objet;
 			this.origine = origine;
 			this.matriculeGestionnaire = matriculeGestionnaire;
-			this.listeDocuments = listeDocuments;
+			//this.listeDocuments = listeDocuments;
 		}
 		
 		
@@ -48,7 +48,7 @@ public class DemandeDTO {
 			int result = 1;
 			result = prime * result + ((idrh == null) ? 0 : idrh.hashCode());
 			result = prime * result + ((codeType == null) ? 0 : codeType.hashCode());
-			result = prime * result + ((listeDocuments == null) ? 0 : listeDocuments.hashCode());
+			// result = prime * result + ((listeDocuments == null) ? 0 : listeDocuments.hashCode());
 			result = prime * result + ((matriculeGestionnaire == null) ? 0 : matriculeGestionnaire.hashCode());
 			result = prime * result + ((objet == null) ? 0 : objet.hashCode());
 			result = prime * result + ((origine == null) ? 0 : origine.hashCode());
@@ -74,11 +74,12 @@ public class DemandeDTO {
 					return false;
 			} else if (!codeType.equals(other.codeType))
 				return false;
+			/*
 			if (listeDocuments == null) {
 				if (other.listeDocuments != null)
 					return false;
 			} else if (!listeDocuments.equals(other.listeDocuments))
-				return false;
+				return false; */
 			if (matriculeGestionnaire == null) {
 				if (other.matriculeGestionnaire != null)
 					return false;
@@ -101,7 +102,7 @@ public class DemandeDTO {
 		public String toString() {
 			return "DemandeDTO [idrh=" + idrh + ", codeType=" + codeType + ", objet=" + objet + ", origine="
 					+ origine + ", matriculeGestionnaire=" + matriculeGestionnaire + ", listeDocuments="
-					+ listeDocuments + "]";
+					/* + listeDocuments*/ + "]";
 		}
 
 		// GETTERS / SETTERS
@@ -129,7 +130,6 @@ public class DemandeDTO {
 		public String getOrigine() {
 			return origine;
 		}
-
 		public void setOrigine(String origine) {
 			this.origine = origine;
 		}
@@ -137,18 +137,17 @@ public class DemandeDTO {
 		public String getMatriculeGestionnaire() {
 			return matriculeGestionnaire;
 		}
-
 		public void setMatriculeGestionnaire(String matriculeGestionnaire) {
 			this.matriculeGestionnaire = matriculeGestionnaire;
 		}
-
+		
+		/*
 		public Set<AttachedDocument> getListeDocuments() {
 			return listeDocuments;
 		}
-
 		public void setListeDocuments(Set<AttachedDocument> listeDocuments) {
 			this.listeDocuments = listeDocuments;
-		}
+		}*/
 		
 		
 	

@@ -19,7 +19,7 @@ public class OrigineServiceImpl implements OrigineService {
 	private OrigineDAO origineDAO;
 	
 	@Override
-	public List<String> findAll() {
+	public List<String> findAllNotAuto() {
 		List<Origine> listOrigines = origineDAO.findAll();
 		List<String> listOriginesAsString = new ArrayList<String>();
 		for (Origine origine : listOrigines) {
@@ -27,7 +27,7 @@ public class OrigineServiceImpl implements OrigineService {
 			listOriginesAsString.add(origine.getLibelle());
 			}
 		}
-		System.out.println("origineService.findAll has been called. About to return a list of size : " + listOriginesAsString.size());
+		// System.out.println("origineService.findAll has been called. About to return a list of size : " + listOriginesAsString.size());
 		return listOriginesAsString;
 	}
 

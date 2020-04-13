@@ -5,57 +5,44 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import co.simplon.finalproject2020.model.enums.NatureTypeDemande;
+import javax.persistence.Table;
 
 @Entity
-public class TypeDemande {
+@Table(name = "NATURE")
+public class Nature {
 	
 	@Id
-	@Column(name = "ID_TYPE_DEMANDE")
+	@Column(name = "ID_NATURE")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name = "LTYPE")
+	@Column(name = "LNATURE", nullable = false)
 	private String libelle;
 	
-	@Column(name = "CTYPE")
+	@Column(name = "CNATURE", nullable = false)
 	private String code;
 	
-	@Column(name = "ECHEANCE")
-	private int echeance;		// nbr de jours
-	
-	
-	// Relationships
-	@ManyToOne
-	@JoinColumn(name = "ID_NATURE")
-	private Nature nature;
-
 	
 	// CONSTRUCTORS
-	public TypeDemande() {
+	public Nature() {
+
 	}
-	public TypeDemande(Nature nature, String libelle, String code, int echeance) {
-		this.nature = nature;
+	public Nature(String libelle, String code) {
 		this.libelle = libelle;
 		this.code = code;
-		this.echeance = echeance;
 	}
-	
+
 	// IMPORTANT OVERRIDES
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((code == null) ? 0 : code.hashCode());
-		result = prime * result + echeance;
 		result = prime * result + id;
 		result = prime * result + ((libelle == null) ? 0 : libelle.hashCode());
-		result = prime * result + ((nature == null) ? 0 : nature.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -64,13 +51,8 @@ public class TypeDemande {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TypeDemande other = (TypeDemande) obj;
-		if (code == null) {
-			if (other.code != null)
-				return false;
-		} else if (!code.equals(other.code))
-			return false;
-		if (echeance != other.echeance)
+		Nature other = (Nature) obj;
+		if (code != other.code)
 			return false;
 		if (id != other.id)
 			return false;
@@ -79,16 +61,13 @@ public class TypeDemande {
 				return false;
 		} else if (!libelle.equals(other.libelle))
 			return false;
-		if (nature != other.nature)
-			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
-		return "TypeDemande [id=" + id + ", nature=" + nature + ", libelle=" + libelle + ", code=" + code
-				+ ", echeance=" + echeance + "]";
+		return "Nature [id=" + id + ", libelle=" + libelle + ", code=" + code + "]";
 	}
-	
 	
 	// GETTERS / SETTERS
 	public int getId() {
@@ -96,13 +75,6 @@ public class TypeDemande {
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public Nature getNature() {
-		return nature;
-	}
-	public void setNature(Nature nature) {
-		this.nature = nature;
 	}
 
 	public String getLibelle() {
@@ -119,12 +91,10 @@ public class TypeDemande {
 		this.code = code;
 	}
 
-	public int getEcheance() {
-		return echeance;
-	}
-	public void setEcheance(int echeance) {
-		this.echeance = echeance;
-	}
+	
+	
+	
+
 	
 	
 	
