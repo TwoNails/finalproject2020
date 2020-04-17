@@ -1,4 +1,4 @@
-package co.simplon.finalproject2020.services;
+package co.simplon.finalproject2020.service;
 
 import java.util.ArrayList;
 import java.util.HashSet;

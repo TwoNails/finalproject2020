@@ -20,10 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.dto.DemandeDTO;
 import co.simplon.finalproject2020.model.dto.TypeDemandeDTO;
-import co.simplon.finalproject2020.services.AgentServiceImpl;
-import co.simplon.finalproject2020.services.DemandeServiceImpl;
-import co.simplon.finalproject2020.services.OrigineServiceImpl;
-import co.simplon.finalproject2020.services.TypeDemandeServiceImpl;
+import co.simplon.finalproject2020.service.AgentService;
+import co.simplon.finalproject2020.service.DemandeService;
+import co.simplon.finalproject2020.service.OrigineService;
+import co.simplon.finalproject2020.service.TypeDemandeService;
 
 @RestController
 @RequestMapping("/demande")
@@ -31,23 +31,23 @@ import co.simplon.finalproject2020.services.TypeDemandeServiceImpl;
 public class DemandeController {
 	
 	@Autowired 
-	DemandeServiceImpl demandeService;
+	DemandeService demandeService;
 	
 	@Autowired 
-	AgentServiceImpl agentService;
+	AgentService agentService;
 	
 	@Autowired
-	TypeDemandeServiceImpl typeDemandeService;
+	TypeDemandeService typeDemandeService;
 	
 	@Autowired
-	OrigineServiceImpl origineService;
+	OrigineService origineService;
 	
 	@PostMapping("/save")
 	public ResponseEntity<Demande> addDemande(@RequestBody DemandeDTO demandeDTO) {
 
 		try {
 			Demande demandeToSave = demandeService.dtoToDemande(demandeDTO);
-			System.out.println("line above is ok, error coming later"); // apparently not, as this line is not appearing
+			System.out.println("demande qu'on vient d'obtenir à partir du DTO" + demandeToSave);
 			return new ResponseEntity<Demande>(demandeService.saveDemande(demandeToSave), HttpStatus.CREATED);	// 201	// should throw an error if the id of the author of the publi can't be found in base.
 		} catch (Exception e) {
 			System.out.println("an error occured");
@@ -71,8 +71,11 @@ public class DemandeController {
 	
 	@GetMapping("/all")
 	public ResponseEntity<List<Demande>> getDemandes() {
-		return new ResponseEntity<List<Demande>>(demandeService.findAll(), HttpStatus.OK);	// eventually replace that endpoint with last 2 months demands
-																							
+		List<Demande> demandes = demandeService.findAll();
+		for (Demande demande : demandes) {
+			demandeService.RemoveAttachedDocuments(demande);
+		}
+		return new ResponseEntity<List<Demande>>(demandes, HttpStatus.OK);	// eventually replace that endpoint with last 2 months demands																						
 	}
 	
 	@GetMapping("/origines")

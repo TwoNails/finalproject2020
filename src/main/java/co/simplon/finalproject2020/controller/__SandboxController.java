@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -39,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.simplon.finalproject2020.model.AttachedDocument;
+import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.__test__Student;
 import co.simplon.finalproject2020.repository.__AttachedDocumentRepository;
 import co.simplon.finalproject2020.repository.__StudentRepository;
@@ -246,6 +251,15 @@ public class __SandboxController {
 		
 		return new ResponseEntity<String>("nothing", HttpStatus.OK);
 		
+	}
+	
+	@GetMapping("/criteria")
+	public ResponseEntity<List<Demande>> getDemandes(){
+		
+		//EntityManagerFactory emf = new 
+		
+		// CriteriaBuilder cb = em.getCriteriaBuilder();
+		return null;	
 	}
 
 }

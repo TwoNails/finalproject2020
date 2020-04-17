@@ -8,24 +8,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "EQUIPE")
-public class Equipe {
+@Table(name = "ROLE")
+public class ProfilUtilisateur {
 	
 	@Id
-	@Column(name = "ID_EQUIPE")
+	@Column(name = "ID_ROLE")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name = "LEQUIPE", nullable = false, length = 18)
+	@Column(name = "LORIGINE", nullable = false, length = 10)
 	private String libelle;
-	
-
-	public Equipe() {
-	}
-
-	public Equipe(String libelle) {
-		this.libelle = libelle;
-	}	
 
 	public int getId() {
 		return id;
@@ -41,11 +33,6 @@ public class Equipe {
 
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
-	}
-
-	@Override
-	public String toString() {
-		return "Equipe [id=" + id + ", libelle=" + libelle + "]";
 	}
 
 	@Override
@@ -65,7 +52,7 @@ public class Equipe {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Equipe other = (Equipe) obj;
+		ProfilUtilisateur other = (ProfilUtilisateur) obj;
 		if (id != other.id)
 			return false;
 		if (libelle == null) {
@@ -76,4 +63,17 @@ public class Equipe {
 		return true;
 	}
 
+	public ProfilUtilisateur(String libelle) {
+		this.libelle = libelle;
+	}
+
+	public ProfilUtilisateur() {
+	}
+	
+	
+	public String getAuthorities() {
+		return getLibelle();
+	}
+	
+	
 }

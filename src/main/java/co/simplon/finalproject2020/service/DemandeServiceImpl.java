@@ -1,4 +1,4 @@
-package co.simplon.finalproject2020.services;
+package co.simplon.finalproject2020.service;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,8 +77,12 @@ public class DemandeServiceImpl implements DemandeService {
 
 	@Override
 	public Demande saveDemande(Demande demande) throws Exception {							// reçoit une nouvelle demande qui n'a pas encore de numéro attribué
-		demande.setNumero(generateNum(demande.getNature().getCode()));
-		return demandeDAO.saveAndFlush(demande);
+		System.out.println(" demande qu'on s'aprete à save : "  + demande);
+		try {
+			return demandeDAO.saveAndFlush(demande);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 	@Override
@@ -133,6 +139,8 @@ public class DemandeServiceImpl implements DemandeService {
 		numeroDemande += year;
 		
 		incrementNumBase++;
+		System.out.println("incrementNumBase = " + incrementNumBase);
+		
 		int numBaseDigits = (int) (Math.log10(incrementNumBase) +1);
 		
 		for(int i=0; i < (4 - numBaseDigits); i++) {
@@ -140,6 +148,7 @@ public class DemandeServiceImpl implements DemandeService {
 		}
 		numeroDemande += incrementNumBase.toString();
 		
+		System.out.println("current value of numeroDemande = " + numeroDemande);
 		return numeroDemande;
 	}
 
@@ -170,4 +179,5 @@ public class DemandeServiceImpl implements DemandeService {
 		demandeToSlim.getListeDocuments().clear();
 		return demandeToSlim;
 	}
+
 }

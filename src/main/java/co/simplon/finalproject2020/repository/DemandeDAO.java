@@ -1,10 +1,40 @@
 package co.simplon.finalproject2020.repository;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import co.simplon.finalproject2020.model.Agent;
 import co.simplon.finalproject2020.model.Demande;
 
+@Repository
 public interface DemandeDAO extends DAO<Demande> {
 	
-	Optional<Demande> findByNumero(String numero);
+
+	Optional<Demande> findByNumero(String numero);	// public ?
+	
+	
 }
+
+
+
+/*
+@Autowired 
+EntityManager entityManager;
+
+// Criteria cr = session.createCriteria(Demande.class);
+
+CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+default List<Demande> findByCreationDateBetween(LocalDate debutPeriode, LocalDate finPeriode){
+
+		return null;
+	}
+*/

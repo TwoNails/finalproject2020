@@ -27,8 +27,8 @@ public class Demande {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	// généré par le service lors de l'instanciation. Les deux premiers chiffres dépendent de la nature (01 à 05), les deux seconds représentent l'année en cours et les 4 suivants s'incrémentent.
-	@Column(name = "NNUMERO", nullable = false, length = 8)
+	// généré par le service lors de l'instanciation. Les deux premiers chiffres dépendent de la nature (01 à 05), les deux suivants représentent l'année en cours et les 4 suivants s'incrémentent.
+	@Column(name = "NNUMERO", nullable = false)
 	private String numero;
 	
 	@Column(name = "OBJET")
@@ -81,11 +81,14 @@ public class Demande {
 	
 	// CONSTRUCTORS
 	public Demande() {
+		// System.out.println("valeur numero au moment de l'instanciation " + numero);
 	}
 																					// contructeur utilisé par le service lors de la conversion du DTO
 	public Demande(String numero, Nature nature, String objet,
 			LocalDate dateCreation, LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type,
 			Origine origine, Agent agent) {
+		System.out.println("valeur numero au moment de l'instanciation " + numero);
+		this.numero = numero;
 		this.nature = nature;
 		this.objet = objet;
 		this.dateCreation = dateCreation;
@@ -99,6 +102,8 @@ public class Demande {
 	public Demande(String numero, Nature nature, String objet,
 			LocalDate dateCreation, LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type,
 			Origine origine, Agent agent, Utilisateur responsable) {
+		// System.out.println("valeur numero au moment de l'instanciation " + numero);
+		this.numero = numero;
 		this.nature = nature;
 		this.objet = objet;
 		this.dateCreation = dateCreation;
@@ -114,6 +119,7 @@ public class Demande {
 			String commentaire, LocalDate dateCreation, LocalDate dateAttribution, LocalDate dateCloture,
 			LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type, Origine origine, Agent agent,
 			Utilisateur responsable) {
+		// System.out.println("valeur numero au moment de l'instanciation " + numero);
 		this.numero = numero;
 		this.nature = nature;
 		this.objet = objet;

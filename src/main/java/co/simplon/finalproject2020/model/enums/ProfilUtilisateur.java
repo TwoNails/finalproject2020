@@ -1,5 +1,12 @@
 package co.simplon.finalproject2020.model.enums;
 
-public enum ProfilUtilisateur {
-	SAISIE, GESTIONNAIRE, ADMIN
+import org.springframework.security.core.GrantedAuthority;
+
+public enum ProfilUtilisateur implements GrantedAuthority {
+	SAISIE, GESTIONNAIRE, ADMIN;
+
+	public String getAuthority() {
+		// TODO Auto-generated method stub
+		return this.name();
+	}
 }

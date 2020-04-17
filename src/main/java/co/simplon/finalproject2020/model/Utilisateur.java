@@ -1,6 +1,7 @@
 package co.simplon.finalproject2020.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -16,11 +17,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import co.simplon.finalproject2020.model.enums.ProfilUtilisateur;
 
 @Entity
 @Table(name = "UTILISATEUR")
-public class Utilisateur {
+public class Utilisateur implements UserDetails {
 	
 	@Id
 	@Column(name = "ID")
@@ -36,6 +41,8 @@ public class Utilisateur {
 	@Column(name = "LPRENOM", nullable = false, length = 30)
 	private String prenom;
 	
+	private String password;
+	
 	@ElementCollection
 	@CollectionTable(
 			name = "tableProfilsUtilisateur",
@@ -44,6 +51,8 @@ public class Utilisateur {
 	@Column(name = "ProfilId")
 	private List<ProfilUtilisateur> roles = new ArrayList<>();
 
+	// @ManyToMany
+	
 	
 	/* GETTERS / SETTERS */
 	
@@ -90,8 +99,15 @@ public class Utilisateur {
 		this.roles = roles;
 	}
 	
+	// public String getPassword() 
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
 	/* IMPORTANT OVERRIDES */
 	
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -135,5 +151,52 @@ public class Utilisateur {
 	@Override
 	public String toString() {
 		return "Utilisateur [id=" + id + ", identifiantRH=" + identifiantRH + ", nom=" + nom + ", prenom=" + prenom + "]";
+	}
+
+	
+	// SECURITY METHODS
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		Collection<GrantedAuthority> rolesAsAuthorities = new ArrayList<>();
+		for (ProfilUtilisateur role : roles) {
+			rolesAsAuthorities.add(new SimpleGrantedAuthority(role.toString()));
+		}
+		return rolesAsAuthorities;
+	}
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return this.password;
+	}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return this.identifiantRH;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
 	}	
 }
