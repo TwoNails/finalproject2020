@@ -62,7 +62,7 @@ public class Agent {
 	private Entite entite;
 	
 	@OneToOne
-	@JoinColumn(name = "CI_ADRESSE", referencedColumnName = "ID")
+	@JoinColumn(name = "ID_ADRESSE", referencedColumnName = "ID")
 	private Adresse adresse;
 
 	

@@ -1,6 +1,7 @@
 package co.simplon.finalproject2020.security;
 
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -58,9 +60,11 @@ public class JwtTokenProvider {
      * @param roles the user roles.
      * @return the created JWT as String.
      */
-    public String createToken(String username, List<ProfilUtilisateur> roles) {
+    public String createToken(String idrh, Collection<? extends GrantedAuthority> roles) {
+    	
+    	System.out.println("on est entré dans la méthode createToken du JwtProvider avec en aprametre idrh = " + idrh + " et roles = " + roles);
 
-        Claims claims = Jwts.claims().setSubject(username);
+        Claims claims = Jwts.claims().setSubject(idrh);
         claims.put("auth", roles.stream().map(s -> s.getAuthority()).filter(Objects::nonNull).collect(Collectors.toList()));
 
         Date now = new Date();

@@ -1,17 +1,23 @@
 package co.simplon.finalproject2020.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import co.simplon.finalproject2020.model.Demande;
+import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 import co.simplon.finalproject2020.model.dto.DemandeDTO;
 
 public interface DemandeService {
 	
 	// CRUD
 	
-	public List<Demande> findAll();
+	public List<Demande> findAll(); 
+	
+	public List<Demande> practiceCriteria(LocalDate fromDate, LocalDate toDate);
+	
+	public List<Demande> findByCriteria(DemandeCriteria criteres);
 	
 	public Demande findById(int id) throws Exception;
 	
@@ -20,6 +26,9 @@ public interface DemandeService {
 	public Demande saveDemande(Demande demande) throws Exception;
 	
 	public boolean addDocuments(String numero, List<MultipartFile> files) throws Exception;
+	
+	
+	
 	
 	// UTILS
 	

@@ -18,9 +18,12 @@ import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.Origine;
 import co.simplon.finalproject2020.model.TypeDemande;
 import co.simplon.finalproject2020.model.Utilisateur;
+import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 import co.simplon.finalproject2020.model.dto.DemandeDTO;
 import co.simplon.finalproject2020.repository.AgentDAO;
 import co.simplon.finalproject2020.repository.AttachedDocumentDAO;
+import co.simplon.finalproject2020.repository.CustomCriteriaRepositoryDemande;
+//import co.simplon.finalproject2020.repository.CustomCriteriaRepositoryDemande;
 import co.simplon.finalproject2020.repository.DemandeDAO;
 import co.simplon.finalproject2020.repository.OrigineDAO;
 import co.simplon.finalproject2020.repository.TypeDemandeDAO;
@@ -49,6 +52,19 @@ public class DemandeServiceImpl implements DemandeService {
 	
 	@Autowired
 	private AttachedDocumentDAO attachedDocumentDAO;
+	
+	// @Autowired
+	// private CustomCriteriaRepositoryDemande<Demande> ccRepository; 
+	
+	/*
+	 * Field ccRepository in co.simplon.finalproject2020.service.DemandeServiceImpl required a single bean, but 2 were found:
+	- customCriteriaRepositoryDemandeImpl: defined in file [C:\Users\Olivier Piveteau\Dropbox\Programmation\springtoolsuite-workspace\finalproject2020\bin\main\co\simplon\finalproject2020\repository\CustomCriteriaRepositoryDemandeImpl.class]
+	- demandeDAO: defined in null
+
+	Action:
+	
+	Consider marking one of the beans as @Primary, updating the consumer to accept multiple beans, or using @Qualifier to identify the bean that should be consumed
+	 * */
 	
 	@Override
 	public List<Demande> findAll() {
@@ -84,6 +100,20 @@ public class DemandeServiceImpl implements DemandeService {
 			throw e;
 		}
 	}
+	
+	
+	 // TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST 
+	 public List<Demande> practiceCriteria(LocalDate fromDate, LocalDate toDate){
+		 // return ccRepository.findAllWithCreationDateBetween(fromDate, toDate);
+		 return null;
+	 }
+	 
+	@Override
+	public List<Demande> findByCriteria(DemandeCriteria criteres) {
+		return demandeDAO.findAllWithCriteria(criteres);
+	}
+	
+	// UTILS
 
 	@Override
 	public Demande dtoToDemande(DemandeDTO demandeDTO) throws Exception {

@@ -13,28 +13,14 @@ import org.springframework.stereotype.Repository;
 
 import co.simplon.finalproject2020.model.Agent;
 import co.simplon.finalproject2020.model.Demande;
+import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 
 @Repository
-public interface DemandeDAO extends DAO<Demande> {
-	
+public interface DemandeDAO extends DAO<Demande>, CustomCriteriaRepositoryDemande {
 
-	Optional<Demande> findByNumero(String numero);	// public ?
+	Optional<Demande> findByNumero(String numero);
 	
+	// we do not need to declare the findall method, as it is described in the extended interface DAO, so we shouldn't need to add the criteria method either
 	
 }
 
-
-
-/*
-@Autowired 
-EntityManager entityManager;
-
-// Criteria cr = session.createCriteria(Demande.class);
-
-CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-
-default List<Demande> findByCreationDateBetween(LocalDate debutPeriode, LocalDate finPeriode){
-
-		return null;
-	}
-*/

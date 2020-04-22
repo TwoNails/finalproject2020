@@ -21,6 +21,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import co.simplon.finalproject2020.model.enums.ProfilUtilisateur;
 
 @Entity
@@ -41,6 +43,7 @@ public class Utilisateur implements UserDetails {
 	@Column(name = "LPRENOM", nullable = false, length = 30)
 	private String prenom;
 	
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // permet de ne pas afficher le pw dans le json
 	private String password;
 	
 	@ElementCollection
@@ -49,9 +52,13 @@ public class Utilisateur implements UserDetails {
 			joinColumns = @JoinColumn(name = "id_utilisateur")
 	)
 	@Column(name = "ProfilId")
-	private List<ProfilUtilisateur> roles = new ArrayList<>();
+	private List<ProfilUtilisateur> roles = new ArrayList<ProfilUtilisateur>();
 
-	// @ManyToMany
+	// @ManyToMany(cascade = { CascadeType.ALL })
+	// @JoinTable(
+	//name = "
+	//)
+	// private List<ProfilUtilisateur> 
 	
 	
 	/* GETTERS / SETTERS */
@@ -106,8 +113,6 @@ public class Utilisateur implements UserDetails {
 	
 	/* IMPORTANT OVERRIDES */
 	
-	
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -150,7 +155,7 @@ public class Utilisateur implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "Utilisateur [id=" + id + ", identifiantRH=" + identifiantRH + ", nom=" + nom + ", prenom=" + prenom + "]";
+		return "Utilisateur [id=" + id + ", identifiantRH=" + identifiantRH + ", password = "+ password + " nom=" + nom + ", prenom=" + prenom + "]";
 	}
 
 	

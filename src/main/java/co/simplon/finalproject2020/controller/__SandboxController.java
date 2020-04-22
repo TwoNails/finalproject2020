@@ -37,6 +37,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,8 +46,10 @@ import org.springframework.web.multipart.MultipartFile;
 import co.simplon.finalproject2020.model.AttachedDocument;
 import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.__test__Student;
+import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 import co.simplon.finalproject2020.repository.__AttachedDocumentRepository;
 import co.simplon.finalproject2020.repository.__StudentRepository;
+import co.simplon.finalproject2020.service.DemandeService;
 
 @RestController
 @RequestMapping("/tests")
@@ -58,6 +61,9 @@ public class __SandboxController {
 	
 	@Autowired
 	private __StudentRepository studentRepository;
+	
+	@Autowired
+	private DemandeService demandeService;
 	
 	@GetMapping("/pdf")		// reading a PDF, turning it into byte[], building a copy of the pdf from the byte[]. Then the same thing but with persistence.
 	public void testStoringFile() throws IOException {
@@ -82,7 +88,7 @@ public class __SandboxController {
 		try {
 			for (int readNum; (readNum = fis.read(buf)) != -1;) {
 				bos.write(buf, 0, readNum);								// the read function uses as a parameter the variable in which the data will be stored. 
-				System.out.println("read " + readNum + " bytes, ");		// Kind of counterintuitive if you ask me wouldn't it make more sense to have this method  
+				System.out.println("read " + readNum + " bytes, ");		// Kind of counterintuitive if you ask me ; wouldn't it make more sense to have this method  
 			}															// return something instead of being void ?
 		} catch (IOException e) {
 			System.out.println("Problème dans la classe __SandboxController");
@@ -253,13 +259,14 @@ public class __SandboxController {
 		
 	}
 	
-	@GetMapping("/criteria")
-	public ResponseEntity<List<Demande>> getDemandes(){
-		
-		//EntityManagerFactory emf = new 
-		
-		// CriteriaBuilder cb = em.getCriteriaBuilder();
-		return null;	
+//	@PostMapping("/criteria")
+//	public ResponseEntity<List<Demande>> getDemandesDate(@RequestBody DemandeCriteria demandeCriteria){
+//		return new ResponseEntity<List<Demande>>(demandeService.practiceCriteria(demandeCriteria.getFromDateCreation(), demandeCriteria.getToDateCreation()), HttpStatus.OK);
+//	}
+	
+	@PostMapping("/criteria2")
+	public ResponseEntity<List<Demande>> getDemandesCrits(@RequestBody DemandeCriteria demandeCriteria){
+		return new ResponseEntity<List<Demande>>(demandeService.findByCriteria(demandeCriteria), HttpStatus.OK);
 	}
 
 }

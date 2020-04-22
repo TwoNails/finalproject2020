@@ -24,7 +24,7 @@ public class Entite {
 	@Column(name = "CREGATE")
 	private String codeRegate;
 	
-	@Column(name = "CBRANCHE", nullable = false, length = 3)
+	@Column(name = "CBRANCHE", nullable = false, length = 4)
 	private String branche;
 	
 	@OneToOne

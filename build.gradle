@@ -27,6 +27,10 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	compile "org.apache.poi:poi:3.17"
     compile "org.apache.poi:poi-ooxml:3.17"
+    
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.10.Final'
+    
 	runtimeOnly 'mysql:mysql-connector-java' //runtimeOnly 'com.h2database:h2'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

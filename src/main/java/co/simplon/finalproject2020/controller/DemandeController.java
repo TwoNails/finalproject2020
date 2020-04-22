@@ -78,6 +78,15 @@ public class DemandeController {
 		return new ResponseEntity<List<Demande>>(demandes, HttpStatus.OK);	// eventually replace that endpoint with last 2 months demands																						
 	}
 	
+	@GetMapping("/{num}")
+	public ResponseEntity<Demande> getDemande(@PathVariable String num){
+		try {
+			return new ResponseEntity<Demande>(demandeService.findByNumero(num), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Demande>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	@GetMapping("/origines")
 	public ResponseEntity<List<String>> getManualOrigines() {								
 		return new ResponseEntity<List<String>>(origineService.findAllNotAuto(), HttpStatus.OK);
