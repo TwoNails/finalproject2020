@@ -7,13 +7,13 @@
 //import org.springframework.stereotype.Service;
 //
 //import co.simplon.finalproject2020.model.Demande;
-//import co.simplon.finalproject2020.repository.CustomCriteriaRepositoryDemande;
+//import co.simplon.finalproject2020.repository.CustomCriteriaRepository;
 //
 //@Service
 //public class TestCriteriaSercice {
 //	
 //	@Autowired
-//	private CustomCriteriaRepositoryDemande<Demande> ccRepository;
+//	private CustomCriteriaRepository<Demande> ccRepository;
 //	
 //	public List<Demande> practiceCriteria(LocalDate fromDate, LocalDate toDate){
 //		return ccRepository.findAllWithCreationDateBetween(fromDate, toDate);

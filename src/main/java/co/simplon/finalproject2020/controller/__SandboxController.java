@@ -259,10 +259,12 @@ public class __SandboxController {
 		
 	}
 	
-//	@PostMapping("/criteria")
-//	public ResponseEntity<List<Demande>> getDemandesDate(@RequestBody DemandeCriteria demandeCriteria){
-//		return new ResponseEntity<List<Demande>>(demandeService.practiceCriteria(demandeCriteria.getFromDateCreation(), demandeCriteria.getToDateCreation()), HttpStatus.OK);
-//	}
+	@PostMapping("/criteria")
+	public ResponseEntity<List<Demande>> getDemandesDate(@RequestBody DemandeCriteria demandeCriteria){
+		System.out.println("endpoint reached");
+		System.out.println("data we got from the body : \nfromDateCreation : " + demandeCriteria.getFromDateCreation() + "\ntoDateCreation : " + demandeCriteria.getToDateCreation());
+		return new ResponseEntity<List<Demande>>(demandeService.practiceCriteria(demandeCriteria.getFromDateCreation(), demandeCriteria.getToDateCreation()), HttpStatus.OK);
+	}
 	
 	@PostMapping("/criteria2")
 	public ResponseEntity<List<Demande>> getDemandesCrits(@RequestBody DemandeCriteria demandeCriteria){

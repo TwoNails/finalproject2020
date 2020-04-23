@@ -1,5 +1,7 @@
 package co.simplon.finalproject2020.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,8 +13,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "ENTITE")
-public class Entite {
+public class Entite implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 534145414362941627L;
+
 	@Id
 	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

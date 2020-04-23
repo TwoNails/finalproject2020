@@ -3,12 +3,14 @@ package co.simplon.finalproject2020.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 import co.simplon.finalproject2020.model.dto.DemandeDTO;
 
+@Service
 public interface DemandeService {
 	
 	// CRUD

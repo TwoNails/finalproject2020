@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.simplon.finalproject2020.model.Demande;
+import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 import co.simplon.finalproject2020.model.dto.DemandeDTO;
 import co.simplon.finalproject2020.model.dto.TypeDemandeDTO;
 import co.simplon.finalproject2020.service.AgentService;
@@ -42,6 +43,15 @@ public class DemandeController {
 	@Autowired
 	OrigineService origineService;
 	
+	
+	
+	
+	/**
+	 * CRUD (C) => Création d'un objet Demande en base
+	 * 
+	 * @param demandeDTO : modèle représentant le nombre minimal d'informations nécessaires à l'ajout d'une nouvelle demande en base.
+	 * @return l'objet Demande tel qu'ajouté en base.
+	 */
 	@PostMapping("/save")
 	public ResponseEntity<Demande> addDemande(@RequestBody DemandeDTO demandeDTO) {
 
@@ -55,7 +65,64 @@ public class DemandeController {
 		}
 	}
 	
-	@PostMapping("adddocuments/{num}")
+	
+	/**
+	 * CRUD (R) => Lecture de la table Demande
+	 * 
+	 * @return la liste de tous les objets Demande situés dans la table correspondante
+	 */
+	@GetMapping("/all")
+	public ResponseEntity<List<Demande>> getDemandes() {
+		List<Demande> demandes = demandeService.findAll();
+		for (Demande demande : demandes) {
+			demandeService.RemoveAttachedDocuments(demande);
+		}
+		return new ResponseEntity<List<Demande>>(demandes, HttpStatus.OK);	// eventually replace that endpoint with last 2 months demands																						
+	}
+	
+	
+	/**
+	 * CRUD (R) => Lecture et recherche par critères
+	 * 
+	 * @param criteres : modèle rassemblant les différents critères de recherche que l'utilisateur peut employer, individuellement ou simultanément
+	 * @return la liste des objets Demande respectant les critères reçus.
+	 */
+	@PostMapping("/all") // with criterias
+	public ResponseEntity<List<Demande>> getDemandesWithCrits(@RequestBody DemandeCriteria criteres) {
+		System.out.println(criteres);
+		List<Demande> demandes = demandeService.findByCriteria(criteres);
+		System.out.println(demandes);
+		for (Demande demande : demandes) {
+			demandeService.RemoveAttachedDocuments(demande);
+		}
+		return new ResponseEntity<List<Demande>>(demandes, HttpStatus.OK);
+	}
+	
+	
+	/**
+	 * CRUD (R) => Lecture et recherche par numéro
+	 * 
+	 * @param num : le numéro de la demande
+	 * @return
+	 */
+	@GetMapping("/{num}")
+	public ResponseEntity<Demande> getDemande(@PathVariable String num){
+		try {
+			return new ResponseEntity<Demande>(demandeService.findByNumero(num), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Demande>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	
+	/**
+	 * CRUD (U) => Mise à jour des pièces jointes
+	 * 
+	 * @param num
+	 * @param files
+	 * @return
+	 */
+	@PostMapping("/documents/{num}")
 	public ResponseEntity<Boolean> addDocuments(@PathVariable String num ,@RequestParam("files") List<MultipartFile> files) {
 		
 		// TODO IN THE SERVICE : search the demande by Num. Instanciate an AttachedDoc for each file on the list and add them to the demande list of Attached Documents. Save&Flush.
@@ -69,23 +136,33 @@ public class DemandeController {
 		}
 	}
 	
-	@GetMapping("/all")
-	public ResponseEntity<List<Demande>> getDemandes() {
-		List<Demande> demandes = demandeService.findAll();
-		for (Demande demande : demandes) {
-			demandeService.RemoveAttachedDocuments(demande);
-		}
-		return new ResponseEntity<List<Demande>>(demandes, HttpStatus.OK);	// eventually replace that endpoint with last 2 months demands																						
+	/**
+	 * CRUD (U) => ajout ou mise à jour du responsable de la demande
+	 * 
+	 * @param idrh : l'idrh du gestionnaire qui se voit attribuer la Demande
+	 * @return l'objet Demande mis à jour
+	 */
+	/**
+	 * 
+	 * @param idrh : l'idrh du gestionnaire qui se voit attribuer la Demande
+	 * @param num
+	 * @return l'objet Demande mis à jour
+	 */
+	@GetMapping("update/{num}/{idrh}")
+	public ResponseEntity<Demande> updateResponsable(@PathVariable String idrh, String num){
+		return new ResponseEntity<Demande>(null);
 	}
 	
-	@GetMapping("/{num}")
-	public ResponseEntity<Demande> getDemande(@PathVariable String num){
-		try {
-			return new ResponseEntity<Demande>(demandeService.findByNumero(num), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<Demande>(HttpStatus.NOT_FOUND);
-		}
+	
+	@PostMapping("update/{num}")
+	public ResponseEntity<Demande> updateObjet(@PathVariable String num){
+		return new ResponseEntity<Demande>(null);
 	}
+	
+	
+	
+	
+	// Listes d'options à proposer en menu déroulant
 	
 	@GetMapping("/origines")
 	public ResponseEntity<List<String>> getManualOrigines() {								

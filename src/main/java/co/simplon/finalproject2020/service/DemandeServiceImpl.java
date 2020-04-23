@@ -22,8 +22,8 @@ import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 import co.simplon.finalproject2020.model.dto.DemandeDTO;
 import co.simplon.finalproject2020.repository.AgentDAO;
 import co.simplon.finalproject2020.repository.AttachedDocumentDAO;
-import co.simplon.finalproject2020.repository.CustomCriteriaRepositoryDemande;
-//import co.simplon.finalproject2020.repository.CustomCriteriaRepositoryDemande;
+import co.simplon.finalproject2020.repository.CustomCriteriaRepository;
+//import co.simplon.finalproject2020.repository.CustomCriteriaRepository;
 import co.simplon.finalproject2020.repository.DemandeDAO;
 import co.simplon.finalproject2020.repository.OrigineDAO;
 import co.simplon.finalproject2020.repository.TypeDemandeDAO;
@@ -53,12 +53,12 @@ public class DemandeServiceImpl implements DemandeService {
 	@Autowired
 	private AttachedDocumentDAO attachedDocumentDAO;
 	
-	// @Autowired
-	// private CustomCriteriaRepositoryDemande<Demande> ccRepository; 
+	@Autowired
+	private CustomCriteriaRepository<Demande> ccRepository; 
 	
 	/*
 	 * Field ccRepository in co.simplon.finalproject2020.service.DemandeServiceImpl required a single bean, but 2 were found:
-	- customCriteriaRepositoryDemandeImpl: defined in file [C:\Users\Olivier Piveteau\Dropbox\Programmation\springtoolsuite-workspace\finalproject2020\bin\main\co\simplon\finalproject2020\repository\CustomCriteriaRepositoryDemandeImpl.class]
+	- customCriteriaRepositoryDemandeImpl: defined in file [C:\Users\Olivier Piveteau\Dropbox\Programmation\springtoolsuite-workspace\finalproject2020\bin\main\co\simplon\finalproject2020\repository\CustomCriteriaDemandeRepositoryImpl.class]
 	- demandeDAO: defined in null
 
 	Action:
@@ -104,13 +104,15 @@ public class DemandeServiceImpl implements DemandeService {
 	
 	 // TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST 
 	 public List<Demande> practiceCriteria(LocalDate fromDate, LocalDate toDate){
-		 // return ccRepository.findAllWithCreationDateBetween(fromDate, toDate);
-		 return null;
+		 return ccRepository.findAllWithCreationDateBetween(fromDate, toDate);
+		 // return null;
 	 }
 	 
 	@Override
 	public List<Demande> findByCriteria(DemandeCriteria criteres) {
-		return demandeDAO.findAllWithCriteria(criteres);
+		// return demandeDAO.findAllWithCriteria(criteres);
+		return ccRepository.findAllWithCriteria(criteres);
+		// return null;
 	}
 	
 	// UTILS

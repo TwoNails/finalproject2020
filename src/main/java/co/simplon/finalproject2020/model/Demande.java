@@ -16,11 +16,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import co.simplon.finalproject2020.model.enums.NatureTypeDemande;
 import co.simplon.finalproject2020.model.AttachedDocument;
 
 @Entity
-public class Demande {
+public class Demande /* implements Serializable */ {
+	
+	// static final long serialVersionUID = 1L;
 	
 	@Id
 	@Column(name = "ID_DEMANDE")
@@ -69,6 +70,10 @@ public class Demande {
 	@ManyToOne
 	@JoinColumn(name = "ID_NATURE", referencedColumnName = "ID_NATURE")
 	private Nature nature;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_STATUT", referencedColumnName = "ID_STATUT")
+	private Statut statut;
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_AGENT", referencedColumnName = "ID_AGENT")

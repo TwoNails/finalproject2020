@@ -14,10 +14,10 @@ import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 
 @NoRepositoryBean
-public interface CustomCriteriaRepositoryDemande {
+public interface CustomCriteriaRepository<T> { // switch back to T asap
 
-	// public List<T> findAllWithCreationDateBetween(LocalDate fromDate, LocalDate toDate);
+	public List<T> findAllWithCreationDateBetween(LocalDate fromDate, LocalDate toDate);
 
-	public List<Demande> findAllWithCriteria(DemandeCriteria criteres); // eventually we'll have to make all Criteria models inherit from an abstract Class and use this one here instead of DemandeCrit
+	public List<T> findAllWithCriteria(DemandeCriteria criteres); // eventually we'll have to make all Criteria models inherit from an abstract Class and use this one here instead of DemandeCrit
 
 }

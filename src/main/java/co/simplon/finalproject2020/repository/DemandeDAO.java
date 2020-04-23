@@ -16,11 +16,13 @@ import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 
 @Repository
-public interface DemandeDAO extends DAO<Demande>, CustomCriteriaRepositoryDemande {
+public interface DemandeDAO extends DAO<Demande> /*, CustomCriteriaRepository<Demande> */ {
 
 	Optional<Demande> findByNumero(String numero);
 	
-	// we do not need to declare the findall method, as it is described in the extended interface DAO, so we shouldn't need to add the criteria method either
+	// we do not need to declare the findAll method, as it is described in the extended interface DAO, so we shouldn't need to add the criteria method either. or should we ?
+	
+	// List<Demande> findAllWithCriteria(DemandeCriteria criteres);
 	
 }
 

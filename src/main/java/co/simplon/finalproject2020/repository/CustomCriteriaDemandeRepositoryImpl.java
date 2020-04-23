@@ -9,22 +9,27 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Repository;
 
+import co.simplon.finalproject2020.model.Agent;
 import co.simplon.finalproject2020.model.Demande;
+import co.simplon.finalproject2020.model.Entite;
+import co.simplon.finalproject2020.model.Nature;
 import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 
 
 @Repository
-public class CustomCriteriaRepositoryDemandeImpl implements CustomCriteriaRepositoryDemande {
+public class CustomCriteriaDemandeRepositoryImpl implements CustomCriteriaRepository<Demande> {
 	
 	@PersistenceContext					// apparamment @PersistenceContext est similaire à @Autowired
 	EntityManager em;					// de fait il n'est pas possible d'utiliser ces lignes si on est dans une interface plutôt qu'une classe, pourquoi ?			
-		
+	
+	@Override
 	public List<Demande> findAllWithCreationDateBetween(LocalDate fromDate, LocalDate toDate){
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Demande> query = cb.createQuery(Demande.class);
@@ -42,31 +47,67 @@ public class CustomCriteriaRepositoryDemandeImpl implements CustomCriteriaReposi
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Demande> critquery = cb.createQuery(Demande.class);
 		Root<Demande> demandeRoot = critquery.from(Demande.class);
+		Join<Demande, Agent> agentJoin = demandeRoot.join("agent");
+		Join<Demande, Nature> natureJoin = demandeRoot.join("nature");
+		Join<Agent, Entite> brancheJoin = agentJoin.join("branche");
 		
 		// un predicate est une condition que je vais pouvoir appliquer à ma recherche. Je crée donc une nouvelle liste, pour l'instant vide, de ces conditions.
 		List<Predicate> predicates = new ArrayList<Predicate>();
 		
-		if(!criteres.getFromDateCreation().equals(null) && !criteres.getToDateCreation().equals(null)) {	// si cette valeur n'est pas nulle ( <=> si l'utilisateur l'a ajouté dans sa requête)
+		if(criteres.getFromDateCreation() != null && criteres.getToDateCreation() != null) {	// si cette valeur n'est pas nulle ( <=> si l'utilisateur l'a ajouté dans sa requête)
 			predicates.add(cb.between((demandeRoot.get("dateCreation")), criteres.getFromDateCreation(), criteres.getToDateCreation())); // on crée le predicate correspondant et on l'ajoute à la liste
 		}
-		if(!criteres.getFromDateAttribution().equals(null) && !criteres.getToDateAttribution().equals(null)) {
+		if(criteres.getFromDateAttribution() != null && criteres.getToDateAttribution() != null) {
 			predicates.add(cb.between((demandeRoot.get("dateAttribution")), criteres.getFromDateAttribution(), criteres.getToDateAttribution()));
 		}
-		if(!criteres.getFromDateEcheance().equals(null) && !criteres.getToDateEcheance().equals(null)) {
+		if(criteres.getFromDateEcheance() != null && criteres.getToDateEcheance() != null) {
 			predicates.add(cb.between((demandeRoot.get("dateEcheance")), criteres.getFromDateEcheance(), criteres.getToDateEcheance()));
 		}
-		if(!criteres.getFromDateCloture().equals(null) && !criteres.getToDateCloture().equals(null)) {
+		if(criteres.getFromDateCloture() != null && criteres.getToDateCloture() != null) {
 			predicates.add(cb.between((demandeRoot.get("dateCloture")), criteres.getFromDateCloture(), criteres.getToDateCloture()));
 		}
-		if(!criteres.getAgentIdrh().equals(null)) {
-			System.out.println("agent idrh received in the request body : " + criteres.getAgentIdrh());
-			System.out.println("hopefully this comes out as a list of String : " + demandeRoot.get("agent"));
-			predicates.add(cb.equal(demandeRoot.get("agent"), criteres.getAgentIdrh()));
+		// la recherche par date doit pouvoir être améliorée. l'utilisateur doit pouvoir choisir juste to ou juste from et obtenir un filtrage.
+		
+		if(criteres.getNumero() != null) {
+			predicates.add(cb.equal(demandeRoot.get("numero"), criteres.getNumero()));
 		}
+		
+		if(criteres.getAgentIdrh() != null) {
+			System.out.println("agent idrh received in the request body : " + criteres.getAgentIdrh());
+			System.out.println("hopefully this comes out as a list of String : " + demandeRoot.get("agent"));	// apparently not => "org.hibernate.query.criteria.internal.path.SingularAttributePath@3b9bb9bc"
+			// predicates.add(cb.equal(demandeRoot.get("agent"), criteres.getAgentIdrh()));
+			
+			System.out.println("ok second try : " + agentJoin.get("identifiantRH")); // apprently still not, but somehow this time cb.equals seems to be able to compare both and declare them equal
+			predicates.add(cb.equal(agentJoin.get("identifiantRH"), criteres.getAgentIdrh()));
+		}
+		
+		if(criteres.getNature() != null) {
+			predicates.add(cb.equal(natureJoin.get("libelle"), criteres.getNature()));
+		}
+		
+		if(criteres.getBranche() != null) {
+			// TODO
+		}
+		
+		if(criteres.getObjet() != null) {
+			// TODO
+		}
+		
+		if(criteres.getStatut() != null) {
+			// TODO
+		}
+		
+		if(criteres.getOrigine() != null) {
+			// TODO
+		}
+		
+		
 		
 		 // we define the query. It will be applied to this root (the database table associated with this entity) and will follow these restrictions.
 		critquery.select(demandeRoot).where(predicates.toArray(new Predicate[] {}));
+		// we create the query and store it in the appropriate Java Object TypedQuery
 		TypedQuery<Demande> query = em.createQuery(critquery);
+		// we return the results
 		return query.getResultList();
 	}
 }
