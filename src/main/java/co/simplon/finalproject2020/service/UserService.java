@@ -48,12 +48,6 @@ public class UserService implements UserDetailsService {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(idrh, password));
 			return jwtTokenProvider.createToken(idrh, utilisateurDAO.findByIdentifiantRH(idrh).get().getAuthorities());
-			/*
-			if(checkPassword(idrh, password)) {
-				return jwtTokenProvider.createToken(idrh, utilisateurDAO.findByIdentifiantRH(idrh).get().getAuthorities());
-			} else {
-				throw new BadCredentialsException("L'IDRH ou le mot de passe est incorrect");
-			}*/
 		} catch (AuthenticationException e) {
 			throw new BadCredentialsException("L'IDRH ou le mot de passe est incorrect");
 		}
@@ -64,16 +58,4 @@ public class UserService implements UserDetailsService {
 		return utilisateurDAO.saveAndFlush(utilisateur);
 	}
 	
-	private boolean checkPassword(String idrh, String password) {
-		Optional<Utilisateur> optUser = utilisateurDAO.findByIdentifiantRH(idrh);
-		if(optUser.isPresent()) {
-			if(optUser.get().getPassword().equals(password)) {
-				return true;
-			} else throw new UsernameNotFoundException("Pas de gestionnaire avec cet IDRH en base");
-		} else return false;
-	}
-	
-	
-	
-
 }

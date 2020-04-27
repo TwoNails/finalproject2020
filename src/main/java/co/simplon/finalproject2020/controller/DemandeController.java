@@ -18,12 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.simplon.finalproject2020.model.Demande;
+import co.simplon.finalproject2020.model.Statut;
 import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 import co.simplon.finalproject2020.model.dto.DemandeDTO;
 import co.simplon.finalproject2020.model.dto.TypeDemandeDTO;
 import co.simplon.finalproject2020.service.AgentService;
+import co.simplon.finalproject2020.service.BrancheService;
 import co.simplon.finalproject2020.service.DemandeService;
 import co.simplon.finalproject2020.service.OrigineService;
+import co.simplon.finalproject2020.service.StatutService;
 import co.simplon.finalproject2020.service.TypeDemandeService;
 
 @RestController
@@ -43,8 +46,13 @@ public class DemandeController {
 	@Autowired
 	OrigineService origineService;
 	
+	@Autowired
+	StatutService statutService;
 	
+	@Autowired
+	BrancheService brancheService;
 	
+
 	
 	/**
 	 * CRUD (C) => Création d'un objet Demande en base
@@ -139,23 +147,28 @@ public class DemandeController {
 	/**
 	 * CRUD (U) => ajout ou mise à jour du responsable de la demande
 	 * 
+	 * @param num : le numéro de la demande qui sera modifiée
 	 * @param idrh : l'idrh du gestionnaire qui se voit attribuer la Demande
 	 * @return l'objet Demande mis à jour
 	 */
+	
+	@GetMapping("update/{num}/{idrh}")
+	public ResponseEntity<Demande> updateResponsable(@PathVariable String num, String idrh){
+		try {
+			return new ResponseEntity<Demande>(demandeService.assign(num, idrh), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
 	/**
 	 * 
-	 * @param idrh : l'idrh du gestionnaire qui se voit attribuer la Demande
-	 * @param num
+	 * @param num : le numéro de la demande qui sera modifiée
+	 * @param commentaire : la nouvelle valeur du champ commentaire
 	 * @return l'objet Demande mis à jour
 	 */
-	@GetMapping("update/{num}/{idrh}")
-	public ResponseEntity<Demande> updateResponsable(@PathVariable String idrh, String num){
-		return new ResponseEntity<Demande>(null);
-	}
-	
-	
 	@PostMapping("update/{num}")
-	public ResponseEntity<Demande> updateObjet(@PathVariable String num){
+	public ResponseEntity<Demande> updateObjet(@PathVariable String num, @RequestBody String commentaire){
 		return new ResponseEntity<Demande>(null);
 	}
 	
@@ -176,6 +189,16 @@ public class DemandeController {
 		} catch (Exception e) {
 			return new ResponseEntity<List<TypeDemandeDTO>>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping("/statuts")
+	public ResponseEntity<List<String>> getStatuts() {
+		return new ResponseEntity<List<String>>(statutService.findAll(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/branches")
+	public ResponseEntity<List<String>> getBranches() {
+		return new ResponseEntity<List<String>>(brancheService.findAll(), HttpStatus.OK);
 	}
 	
 }

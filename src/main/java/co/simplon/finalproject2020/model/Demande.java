@@ -91,7 +91,7 @@ public class Demande /* implements Serializable */ {
 																					// contructeur utilisé par le service lors de la conversion du DTO
 	public Demande(String numero, Nature nature, String objet,
 			LocalDate dateCreation, LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type,
-			Origine origine, Agent agent) {
+			Origine origine, Statut statut, Agent agent) {
 		System.out.println("valeur numero au moment de l'instanciation " + numero);
 		this.numero = numero;
 		this.nature = nature;
@@ -101,13 +101,13 @@ public class Demande /* implements Serializable */ {
 		this.listeDocuments = listeDocuments;
 		this.type = type;
 		this.origine = origine;
+		this.statut = statut;
 		this.agent = agent;
 	}
 																					// contructeur utilisé par le service lors de la conversion du DTO
 	public Demande(String numero, Nature nature, String objet,
 			LocalDate dateCreation, LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type,
-			Origine origine, Agent agent, Utilisateur responsable) {
-		// System.out.println("valeur numero au moment de l'instanciation " + numero);
+			Origine origine, Statut statut, Agent agent, Utilisateur responsable) {
 		this.numero = numero;
 		this.nature = nature;
 		this.objet = objet;
@@ -116,6 +116,7 @@ public class Demande /* implements Serializable */ {
 		this.listeDocuments = listeDocuments;
 		this.type = type;
 		this.origine = origine;
+		this.statut = statut;
 		this.agent = agent;
 		this.responsable = responsable;
 	}
@@ -124,7 +125,6 @@ public class Demande /* implements Serializable */ {
 			String commentaire, LocalDate dateCreation, LocalDate dateAttribution, LocalDate dateCloture,
 			LocalDate dateEcheance, List<AttachedDocument> listeDocuments, TypeDemande type, Origine origine, Agent agent,
 			Utilisateur responsable) {
-		// System.out.println("valeur numero au moment de l'instanciation " + numero);
 		this.numero = numero;
 		this.nature = nature;
 		this.objet = objet;
@@ -142,6 +142,15 @@ public class Demande /* implements Serializable */ {
 	
 	// IMPORTANT OVERRRIDES
 	@Override
+	public String toString() {
+		return "Demande [id=" + id + ", numero=" + numero + ", objet=" + objet + ", commentaire=" + commentaire
+				+ ", dateCreation=" + dateCreation + ", dateAttribution=" + dateAttribution + ", dateCloture="
+				+ dateCloture + ", dateEcheance=" + dateEcheance + ", listeDocuments=" + listeDocuments + ", origine="
+				+ origine + ", type=" + type + ", nature=" + nature + ", statut=" + statut + ", agent=" + agent
+				+ ", responsable=" + responsable + "]";
+	}
+	
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -158,10 +167,11 @@ public class Demande /* implements Serializable */ {
 		result = prime * result + ((objet == null) ? 0 : objet.hashCode());
 		result = prime * result + ((origine == null) ? 0 : origine.hashCode());
 		result = prime * result + ((responsable == null) ? 0 : responsable.hashCode());
+		result = prime * result + ((statut == null) ? 0 : statut.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -208,7 +218,10 @@ public class Demande /* implements Serializable */ {
 				return false;
 		} else if (!listeDocuments.equals(other.listeDocuments))
 			return false;
-		if (nature != other.nature)
+		if (nature == null) {
+			if (other.nature != null)
+				return false;
+		} else if (!nature.equals(other.nature))
 			return false;
 		if (numero == null) {
 			if (other.numero != null)
@@ -220,12 +233,20 @@ public class Demande /* implements Serializable */ {
 				return false;
 		} else if (!objet.equals(other.objet))
 			return false;
-		if (origine != other.origine)
+		if (origine == null) {
+			if (other.origine != null)
+				return false;
+		} else if (!origine.equals(other.origine))
 			return false;
 		if (responsable == null) {
 			if (other.responsable != null)
 				return false;
 		} else if (!responsable.equals(other.responsable))
+			return false;
+		if (statut == null) {
+			if (other.statut != null)
+				return false;
+		} else if (!statut.equals(other.statut))
 			return false;
 		if (type == null) {
 			if (other.type != null)
@@ -234,15 +255,6 @@ public class Demande /* implements Serializable */ {
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "Demande [id=" + id + ", numero=" + numero + ", natureDemande=" + nature + ", origineDemande="
-				+ origine + ", objet=" + objet + ", commentaire=" + commentaire + ", dateCreation="
-				+ dateCreation + ", dateAttribution=" + dateAttribution + ", dateCloture=" + dateCloture
-				+ ", dateEcheance=" + dateEcheance + ", listeDocuments=" + listeDocuments + ", type=" + type
-				+ ", agent=" + agent + ", responsable=" + responsable + "]";
-	}	
 	
 	// GETTERS / SETTERS
 	public int getId() {
@@ -329,6 +341,16 @@ public class Demande /* implements Serializable */ {
 		this.type = type;
 	}
 
+	public Statut getStatut() {
+		return statut;
+	}
+	public void setStatut(Statut statut) {
+		this.statut = statut;
+	}
+	
+	public void setOrigine(Origine origine) {
+		this.origine = origine;
+	}
 	public Agent getAgent() {
 		return agent;
 	}

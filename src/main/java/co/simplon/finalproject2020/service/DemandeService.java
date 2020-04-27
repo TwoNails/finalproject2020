@@ -29,6 +29,9 @@ public interface DemandeService {
 	
 	public boolean addDocuments(String numero, List<MultipartFile> files) throws Exception;
 	
+	public Demande assign(String numero, String idrh) throws Exception;
+	
+	public Demande comment(String numero, String commentaire) throws Exception;
 	
 	
 	

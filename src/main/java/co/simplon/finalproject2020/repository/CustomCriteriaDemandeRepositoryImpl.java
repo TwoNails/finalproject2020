@@ -20,6 +20,8 @@ import co.simplon.finalproject2020.model.Agent;
 import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.Entite;
 import co.simplon.finalproject2020.model.Nature;
+import co.simplon.finalproject2020.model.Origine;
+import co.simplon.finalproject2020.model.Statut;
 import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 
 
@@ -49,26 +51,40 @@ public class CustomCriteriaDemandeRepositoryImpl implements CustomCriteriaReposi
 		Root<Demande> demandeRoot = critquery.from(Demande.class);
 		Join<Demande, Agent> agentJoin = demandeRoot.join("agent");
 		Join<Demande, Nature> natureJoin = demandeRoot.join("nature");
-		Join<Agent, Entite> brancheJoin = agentJoin.join("branche");
+		Join<Agent, Entite> entiteJoin = agentJoin.join("entite");
+		Join<Demande, Statut> statutJoin = demandeRoot.join("statut");
+		Join<Demande, Origine> origineJoin = demandeRoot.join("origine");
 		
 		// un predicate est une condition que je vais pouvoir appliquer à ma recherche. Je crée donc une nouvelle liste, pour l'instant vide, de ces conditions.
 		List<Predicate> predicates = new ArrayList<Predicate>();
 		
-		if(criteres.getFromDateCreation() != null && criteres.getToDateCreation() != null) {	// si cette valeur n'est pas nulle ( <=> si l'utilisateur l'a ajouté dans sa requête)
-			predicates.add(cb.between((demandeRoot.get("dateCreation")), criteres.getFromDateCreation(), criteres.getToDateCreation())); // on crée le predicate correspondant et on l'ajoute à la liste
+		if(criteres.getFromDateCreation() != null) {
+			predicates.add(cb.greaterThanOrEqualTo(demandeRoot.get("dateCreation"), criteres.getFromDateCreation()));
 		}
-		if(criteres.getFromDateAttribution() != null && criteres.getToDateAttribution() != null) {
-			predicates.add(cb.between((demandeRoot.get("dateAttribution")), criteres.getFromDateAttribution(), criteres.getToDateAttribution()));
+		if(criteres.getToDateCreation() != null) {
+			predicates.add(cb.lessThanOrEqualTo(demandeRoot.get("dateCreation"), criteres.getToDateCreation()));
 		}
-		if(criteres.getFromDateEcheance() != null && criteres.getToDateEcheance() != null) {
-			predicates.add(cb.between((demandeRoot.get("dateEcheance")), criteres.getFromDateEcheance(), criteres.getToDateEcheance()));
+		if(criteres.getFromDateAttribution() != null) {
+			predicates.add(cb.greaterThanOrEqualTo(demandeRoot.get("dateAttribution"), criteres.getFromDateAttribution()));
 		}
-		if(criteres.getFromDateCloture() != null && criteres.getToDateCloture() != null) {
-			predicates.add(cb.between((demandeRoot.get("dateCloture")), criteres.getFromDateCloture(), criteres.getToDateCloture()));
+		if(criteres.getToDateAttribution() != null) {
+			predicates.add(cb.lessThanOrEqualTo(demandeRoot.get("dateAttribution"), criteres.getToDateAttribution()));
 		}
-		// la recherche par date doit pouvoir être améliorée. l'utilisateur doit pouvoir choisir juste to ou juste from et obtenir un filtrage.
+		if(criteres.getFromDateEcheance() != null) {
+			predicates.add(cb.greaterThanOrEqualTo(demandeRoot.get("dateEcheance"), criteres.getFromDateEcheance()));
+		}
+		if(criteres.getToDateEcheance() != null) {
+			predicates.add(cb.lessThanOrEqualTo(demandeRoot.get("dateEcheance"), criteres.getToDateEcheance()));
+		}
+		if(criteres.getFromDateCloture() != null) {
+			predicates.add(cb.greaterThanOrEqualTo(demandeRoot.get("dateCloture"), criteres.getFromDateCloture()));
+		}
+		if(criteres.getToDateCloture() != null) {
+			predicates.add(cb.lessThanOrEqualTo(demandeRoot.get("dateCloture"), criteres.getToDateCloture()));
+		}
 		
 		if(criteres.getNumero() != null) {
+			System.out.println("num is suspect");
 			predicates.add(cb.equal(demandeRoot.get("numero"), criteres.getNumero()));
 		}
 		
@@ -84,22 +100,26 @@ public class CustomCriteriaDemandeRepositoryImpl implements CustomCriteriaReposi
 		if(criteres.getNature() != null) {
 			predicates.add(cb.equal(natureJoin.get("libelle"), criteres.getNature()));
 		}
-		
+
 		if(criteres.getBranche() != null) {
-			// TODO
+			predicates.add(cb.equal(entiteJoin.get("branche"), criteres.getBranche()));
 		}
 		
 		if(criteres.getObjet() != null) {
-			// TODO
+			String pattern = "%" + criteres.getObjet() + "%";
+			predicates.add(cb.like(demandeRoot.get("objet"), pattern));
 		}
 		
 		if(criteres.getStatut() != null) {
-			// TODO
+			predicates.add(cb.equal(statutJoin.get("libelle"), criteres.getStatut()));
 		}
 		
 		if(criteres.getOrigine() != null) {
-			// TODO
+			System.out.println("ori is suspect");
+			predicates.add(cb.equal(origineJoin.get("libelle"), criteres.getOrigine()));
 		}
+		
+		System.out.println("List<Predicate> predicates : " + predicates);
 		
 		
 		

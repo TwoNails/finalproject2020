@@ -16,6 +16,7 @@ import co.simplon.finalproject2020.model.Agent;
 import co.simplon.finalproject2020.model.AttachedDocument;
 import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.Origine;
+import co.simplon.finalproject2020.model.Statut;
 import co.simplon.finalproject2020.model.TypeDemande;
 import co.simplon.finalproject2020.model.Utilisateur;
 import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
@@ -26,6 +27,7 @@ import co.simplon.finalproject2020.repository.CustomCriteriaRepository;
 //import co.simplon.finalproject2020.repository.CustomCriteriaRepository;
 import co.simplon.finalproject2020.repository.DemandeDAO;
 import co.simplon.finalproject2020.repository.OrigineDAO;
+import co.simplon.finalproject2020.repository.StatutDAO;
 import co.simplon.finalproject2020.repository.TypeDemandeDAO;
 import co.simplon.finalproject2020.repository.UtilisateurDAO;
 
@@ -49,6 +51,9 @@ public class DemandeServiceImpl implements DemandeService {
 	
 	@Autowired
 	private OrigineDAO origineDAO;
+	
+	@Autowired
+	private StatutDAO statutDAO;
 	
 	@Autowired
 	private AttachedDocumentDAO attachedDocumentDAO;
@@ -122,10 +127,12 @@ public class DemandeServiceImpl implements DemandeService {
 		Optional<Agent> optAgent = agentDAO.findByIdentifiantRH(demandeDTO.getIdrh());
 		Optional<TypeDemande> optType = typeDemandeDAO.findByCode(demandeDTO.getCodeType());							// a priori ici on devrait pouvoir se passer d'optionnel
 		Optional<Origine> optOrigine = origineDAO.findByLibelle(demandeDTO.getOrigine());
+
 		
-		if(!demandeDTO.getMatriculeGestionnaire().equals("")) {
+		if(!demandeDTO.getMatriculeGestionnaire().equals("N/A")) {
 			Optional<Utilisateur> optUtilisateur = utilisateurDAO.findByIdentifiantRH(demandeDTO.getMatriculeGestionnaire());
-			if(optAgent.isPresent() && optOrigine.isPresent() && optType.isPresent() && optUtilisateur.isPresent()) {
+			Optional<Statut> optStatut = statutDAO.findById(2);
+			if(optAgent.isPresent() && optOrigine.isPresent() && optType.isPresent() && optUtilisateur.isPresent() && optStatut.isPresent()) {
 				
 				TypeDemande type = optType.get();
 				LocalDate dateEcheance = LocalDate.now().plusDays((long)type.getEcheance());
@@ -138,14 +145,15 @@ public class DemandeServiceImpl implements DemandeService {
 										new ArrayList<AttachedDocument>(),//demandeDTO.getListeDocuments(), 
 										type,
 										optOrigine.get(),
+										optStatut.get(),
 										optAgent.get(), 
 										optUtilisateur.get());		
 			} else {
 				throw new Exception("Agent et/ou Gestionnaire introuvable en base");
 			}
-		} else {	// if MatriculeGestionnaire is equal to an empty String, we use the other constructor that won't try to instanciate it
-			
-			if(optAgent.isPresent() && optOrigine.isPresent() && optType.isPresent()) {
+		} else {	// if MatriculeGestionnaire is equal to "N/A", we use the other constructor that won't try to instanciate it
+			Optional<Statut> optStatut = statutDAO.findById(1);
+			if(optAgent.isPresent() && optOrigine.isPresent() && optType.isPresent() && optStatut.isPresent()) {
 				TypeDemande type = optType.get();
 				LocalDate dateEcheance = LocalDate.now().plusDays((long)type.getEcheance());
 				
@@ -157,6 +165,7 @@ public class DemandeServiceImpl implements DemandeService {
 										new ArrayList<AttachedDocument>(),//demandeDTO.getListeDocuments(), 
 										type,
 										optOrigine.get(),
+										optStatut.get(),
 										optAgent.get());
 			} else {
 				throw new Exception("Agent introuvable en base");
@@ -210,6 +219,25 @@ public class DemandeServiceImpl implements DemandeService {
 	public Demande RemoveAttachedDocuments(Demande demandeToSlim) {
 		demandeToSlim.getListeDocuments().clear();
 		return demandeToSlim;
+	}
+
+	@Override
+	public Demande assign(String numero, String idrh) throws Exception {
+		Demande demande = this.findByNumero(numero);
+		Optional<Utilisateur> optUtilisateur = utilisateurDAO.findByIdentifiantRH(idrh);
+		if(optUtilisateur.isPresent()) {
+			demande.setResponsable(optUtilisateur.get());
+		} else {
+			throw new Exception("idrh can't be found in database");
+		}
+		return demandeDAO.saveAndFlush(demande);
+	}
+
+	@Override
+	public Demande comment(String numero, String commentaire) throws Exception {
+		Demande demande = this.findByNumero(numero);
+		demande.setCommentaire(commentaire);
+		return demandeDAO.saveAndFlush(demande);
 	}
 
 }
