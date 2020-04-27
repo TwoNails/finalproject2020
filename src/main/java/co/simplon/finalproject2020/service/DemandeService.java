@@ -31,7 +31,7 @@ public interface DemandeService {
 	
 	public Demande assign(String numero, String idrh) throws Exception;
 	
-	public Demande comment(String numero, String commentaire) throws Exception;
+	public Demande updateComment(String numero, String commentaire) throws Exception;
 	
 	
 	

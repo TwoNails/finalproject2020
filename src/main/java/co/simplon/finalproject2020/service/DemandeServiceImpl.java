@@ -224,8 +224,10 @@ public class DemandeServiceImpl implements DemandeService {
 	@Override
 	public Demande assign(String numero, String idrh) throws Exception {
 		Demande demande = this.findByNumero(numero);
+		System.out.println("Demande found : " + demande);
 		Optional<Utilisateur> optUtilisateur = utilisateurDAO.findByIdentifiantRH(idrh);
 		if(optUtilisateur.isPresent()) {
+			System.out.println("Gestionnaire found : " + optUtilisateur.get());
 			demande.setResponsable(optUtilisateur.get());
 		} else {
 			throw new Exception("idrh can't be found in database");
@@ -234,7 +236,7 @@ public class DemandeServiceImpl implements DemandeService {
 	}
 
 	@Override
-	public Demande comment(String numero, String commentaire) throws Exception {
+	public Demande updateComment(String numero, String commentaire) throws Exception {
 		Demande demande = this.findByNumero(numero);
 		demande.setCommentaire(commentaire);
 		return demandeDAO.saveAndFlush(demande);

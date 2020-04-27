@@ -153,7 +153,8 @@ public class DemandeController {
 	 */
 	
 	@GetMapping("update/{num}/{idrh}")
-	public ResponseEntity<Demande> updateResponsable(@PathVariable String num, String idrh){
+	public ResponseEntity<Demande> updateResponsable(@PathVariable String num, @PathVariable String idrh){
+		System.out.println("on entre dans le controller avec num = " + num + ", idrh = " + idrh);
 		try {
 			return new ResponseEntity<Demande>(demandeService.assign(num, idrh), HttpStatus.OK);
 		} catch (Exception e) {
@@ -169,7 +170,11 @@ public class DemandeController {
 	 */
 	@PostMapping("update/{num}")
 	public ResponseEntity<Demande> updateObjet(@PathVariable String num, @RequestBody String commentaire){
-		return new ResponseEntity<Demande>(null);
+		try {
+			return new ResponseEntity<Demande>(demandeService.updateComment(num, commentaire), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	
