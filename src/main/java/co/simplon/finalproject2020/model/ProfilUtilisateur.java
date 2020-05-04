@@ -16,7 +16,7 @@ public class ProfilUtilisateur {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name = "LORIGINE", nullable = false, length = 10)
+	@Column(name = "LROLE", nullable = false)
 	private String libelle;
 
 	public int getId() {

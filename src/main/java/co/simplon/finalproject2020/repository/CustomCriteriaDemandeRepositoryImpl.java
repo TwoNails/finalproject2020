@@ -17,6 +17,7 @@ import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Repository;
 
 import co.simplon.finalproject2020.model.Agent;
+import co.simplon.finalproject2020.model.Branche;
 import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.Entite;
 import co.simplon.finalproject2020.model.Nature;
@@ -26,23 +27,11 @@ import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 
 
 @Repository
-public class CustomCriteriaDemandeRepositoryImpl implements CustomCriteriaRepository<Demande> {
+public class CustomCriteriaDemandeRepositoryImpl implements CustomCriteriaDemandeRepository {
 	
 	@PersistenceContext					// apparamment @PersistenceContext est similaire à @Autowired
 	EntityManager em;					// de fait il n'est pas possible d'utiliser ces lignes si on est dans une interface plutôt qu'une classe, pourquoi ?			
 	
-	@Override
-	public List<Demande> findAllWithCreationDateBetween(LocalDate fromDate, LocalDate toDate){
-		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<Demande> query = cb.createQuery(Demande.class);
-		Root<Demande> demandeRoot = query.from(Demande.class);
-		
-		query.select(demandeRoot).where(cb.between((demandeRoot.get("dateCreation")), fromDate, toDate)); 
-		TypedQuery<Demande> typedQuery = em.createQuery(query);
-		
-		return typedQuery.getResultList();
-		
-	}
 
 	@Override 								// DemandeCriteria est un modèle compilant tous les différents critères que l'utilisateur peut, ou non, vouloir incorporer à sa requête.
 	public List<Demande> findAllWithCriteria(DemandeCriteria criteres) {
@@ -52,6 +41,7 @@ public class CustomCriteriaDemandeRepositoryImpl implements CustomCriteriaReposi
 		Join<Demande, Agent> agentJoin = demandeRoot.join("agent");
 		Join<Demande, Nature> natureJoin = demandeRoot.join("nature");
 		Join<Agent, Entite> entiteJoin = agentJoin.join("entite");
+		Join<Entite, Branche> brancheJoin = entiteJoin.join("branche");
 		Join<Demande, Statut> statutJoin = demandeRoot.join("statut");
 		Join<Demande, Origine> origineJoin = demandeRoot.join("origine");
 		
@@ -84,7 +74,6 @@ public class CustomCriteriaDemandeRepositoryImpl implements CustomCriteriaReposi
 		}
 		
 		if(criteres.getNumero() != null) {
-			System.out.println("num is suspect");
 			predicates.add(cb.equal(demandeRoot.get("numero"), criteres.getNumero()));
 		}
 		
@@ -102,7 +91,7 @@ public class CustomCriteriaDemandeRepositoryImpl implements CustomCriteriaReposi
 		}
 
 		if(criteres.getBranche() != null) {
-			predicates.add(cb.equal(entiteJoin.get("branche"), criteres.getBranche()));
+			predicates.add(cb.equal(brancheJoin.get("code"), criteres.getBranche()));
 		}
 		
 		if(criteres.getObjet() != null) {
@@ -115,12 +104,8 @@ public class CustomCriteriaDemandeRepositoryImpl implements CustomCriteriaReposi
 		}
 		
 		if(criteres.getOrigine() != null) {
-			System.out.println("ori is suspect");
 			predicates.add(cb.equal(origineJoin.get("libelle"), criteres.getOrigine()));
 		}
-		
-		System.out.println("List<Predicate> predicates : " + predicates);
-		
 		
 		
 		 // we define the query. It will be applied to this root (the database table associated with this entity) and will follow these restrictions.

@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -31,8 +32,11 @@ public class Entite implements Serializable {
 	@Column(name = "CREGATE")
 	private String codeRegate;
 	
-	@Column(name = "CBRANCHE", nullable = false, length = 4)
-	private String branche;
+	// relations
+	
+	@ManyToOne
+	@JoinColumn(name = "CBRANCHE", referencedColumnName = "CBRANCHE")
+	private Branche branche;
 	
 	@OneToOne
 	@JoinColumn(name ="ID_ADRESSE", referencedColumnName = "ID")
@@ -61,10 +65,10 @@ public class Entite implements Serializable {
 		this.codeRegate = codeRegate;
 	}
 
-	public String getBranche() {
+	public Branche getBranche() {
 		return branche;
 	}
-	public void setBranche(String branche) {
+	public void setBranche(Branche branche) {
 		this.branche = branche;
 	}
 

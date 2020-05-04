@@ -1,5 +1,6 @@
 package co.simplon.finalproject2020.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -35,16 +36,14 @@ public class Agent {
 	@Column(name = "CCIVILITE", /*nullable = false,*/ length = 1)
 	private String civilite;
 	
-	@Column(name = "CGRADE", length = 6)
-	private String grade;
 	
 	@Column(name = "DNAISSANCE"/*, nullable = false*/)
-	@Temporal(TemporalType.DATE)
-	private Date dateNaissance;
+	//@Temporal(TemporalType.DATE)
+	private LocalDate dateNaissance;
 	
 	@Column(name = "DENTREE_POSTE"/*, nullable = false*/)
-	@Temporal(TemporalType.DATE)
-	private Date dateEntree;
+	//@Temporal(TemporalType.DATE)
+	private LocalDate dateEntree;
 	
 	@Column(name = "NTELEPHONE", nullable = true, length = 16)
 	private String numTelephone;
@@ -61,10 +60,14 @@ public class Agent {
 	@JoinColumn(name = "CREGATE", referencedColumnName = "CREGATE")
 	private Entite entite;
 	
+	@ManyToOne
+	@JoinColumn(name = "CGRADE", referencedColumnName = "CGRADE")
+	private Grade grade;
+	
 	@OneToOne
 	@JoinColumn(name = "ID_ADRESSE", referencedColumnName = "ID")
 	private Adresse adresse;
-
+	
 	
 	/* GETTERS / SETTERS */
 	
@@ -103,24 +106,24 @@ public class Agent {
 		this.civilite = civilite;
 	}
 
-	public String getGrade() {
+	public Grade getGrade() {
 		return grade;
 	}
-	public void setGrade(String grade) {
+	public void setGrade(Grade grade) {
 		this.grade = grade;
 	}
 
-	public Date getDateNaissance() {
+	public LocalDate getDateNaissance() {
 		return dateNaissance;
 	}
-	public void setDateNaissance(Date dateNaissance) {
+	public void setDateNaissance(LocalDate dateNaissance) {
 		this.dateNaissance = dateNaissance;
 	}
 
-	public Date getDateEntree() {
+	public LocalDate getDateEntree() {
 		return dateEntree;
 	}
-	public void setDateEntree(Date dateEntree) {
+	public void setDateEntree(LocalDate dateEntree) {
 		this.dateEntree = dateEntree;
 	}
 

@@ -17,8 +17,6 @@ public interface DemandeService {
 	
 	public List<Demande> findAll(); 
 	
-	public List<Demande> practiceCriteria(LocalDate fromDate, LocalDate toDate);
-	
 	public List<Demande> findByCriteria(DemandeCriteria criteres);
 	
 	public Demande findById(int id) throws Exception;

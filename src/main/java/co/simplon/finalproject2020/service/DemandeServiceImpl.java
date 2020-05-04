@@ -23,8 +23,9 @@ import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 import co.simplon.finalproject2020.model.dto.DemandeDTO;
 import co.simplon.finalproject2020.repository.AgentDAO;
 import co.simplon.finalproject2020.repository.AttachedDocumentDAO;
+import co.simplon.finalproject2020.repository.CustomCriteriaDemandeRepository;
 import co.simplon.finalproject2020.repository.CustomCriteriaRepository;
-//import co.simplon.finalproject2020.repository.CustomCriteriaRepository;
+//import co.simplon.finalproject2020.repository.CustomCriteriaDemandeRepository;
 import co.simplon.finalproject2020.repository.DemandeDAO;
 import co.simplon.finalproject2020.repository.OrigineDAO;
 import co.simplon.finalproject2020.repository.StatutDAO;
@@ -59,7 +60,7 @@ public class DemandeServiceImpl implements DemandeService {
 	private AttachedDocumentDAO attachedDocumentDAO;
 	
 	@Autowired
-	private CustomCriteriaRepository<Demande> ccRepository; 
+	private CustomCriteriaDemandeRepository ccRepository; 
 	
 	/*
 	 * Field ccRepository in co.simplon.finalproject2020.service.DemandeServiceImpl required a single bean, but 2 were found:
@@ -74,6 +75,13 @@ public class DemandeServiceImpl implements DemandeService {
 	@Override
 	public List<Demande> findAll() {
 		return demandeDAO.findAll();
+	}
+	
+	@Override
+	public List<Demande> findByCriteria(DemandeCriteria criteres) {
+		// return demandeDAO.findAllWithCriteria(criteres);
+		return ccRepository.findAllWithCriteria(criteres);
+		// return null;
 	}
 	
 	@Override
@@ -105,20 +113,7 @@ public class DemandeServiceImpl implements DemandeService {
 			throw e;
 		}
 	}
-	
-	
-	 // TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST 
-	 public List<Demande> practiceCriteria(LocalDate fromDate, LocalDate toDate){
-		 return ccRepository.findAllWithCreationDateBetween(fromDate, toDate);
-		 // return null;
-	 }
-	 
-	@Override
-	public List<Demande> findByCriteria(DemandeCriteria criteres) {
-		// return demandeDAO.findAllWithCriteria(criteres);
-		return ccRepository.findAllWithCriteria(criteres);
-		// return null;
-	}
+
 	
 	// UTILS
 
@@ -229,6 +224,7 @@ public class DemandeServiceImpl implements DemandeService {
 		if(optUtilisateur.isPresent()) {
 			System.out.println("Gestionnaire found : " + optUtilisateur.get());
 			demande.setResponsable(optUtilisateur.get());
+			demande.setDateAttribution(LocalDate.now());
 		} else {
 			throw new Exception("idrh can't be found in database");
 		}

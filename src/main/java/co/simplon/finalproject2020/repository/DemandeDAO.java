@@ -16,7 +16,7 @@ import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 
 @Repository
-public interface DemandeDAO extends DAO<Demande> /*, CustomCriteriaRepository<Demande> */ {
+public interface DemandeDAO extends DAO<Demande> /*, CustomCriteriaDemandeRepository<Demande> */ {
 
 	Optional<Demande> findByNumero(String numero);
 	

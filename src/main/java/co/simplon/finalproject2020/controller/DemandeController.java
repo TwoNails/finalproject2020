@@ -163,6 +163,7 @@ public class DemandeController {
 	}
 
 	/**
+	 * CRUD (U) => ajout ou mise à jour d'un commentaire
 	 * 
 	 * @param num : le numéro de la demande qui sera modifiée
 	 * @param commentaire : la nouvelle valeur du champ commentaire
