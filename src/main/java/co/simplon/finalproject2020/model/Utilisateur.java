@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -60,9 +61,15 @@ public class Utilisateur implements UserDetails {
 	//)
 	// private List<ProfilUtilisateur> 
 	
+	@ManyToOne
+	@JoinColumn(name = "ID_EQUIPE", referencedColumnName = "ID_EQUIPE")
+	private Equipe equipe;
 	
-	/* GETTERS / SETTERS */
 	
+	
+	// GETTERS / SETTERS
+	
+
 	public int getId() {
 		return id;
 	}
@@ -104,6 +111,13 @@ public class Utilisateur implements UserDetails {
 	}
 	public void setRoles(List<ProfilUtilisateur> roles) {
 		this.roles = roles;
+	}
+	
+	public Equipe getEquipe() {
+		return equipe;
+	}
+	public void setEquipe(Equipe equipe) {
+		this.equipe = equipe;
 	}
 	
 	// public String getPassword() 

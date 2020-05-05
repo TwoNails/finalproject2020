@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import co.simplon.finalproject2020.exception.InvalidJWTException;
+import co.simplon.finalproject2020.model.Utilisateur;
 import co.simplon.finalproject2020.model.enums.ProfilUtilisateur;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -62,10 +63,14 @@ public class JwtTokenProvider {
      */
     public String createToken(String idrh, Collection<? extends GrantedAuthority> roles) {
     	
-    	System.out.println("on est entré dans la méthode createToken du JwtProvider avec en aprametre idrh = " + idrh + " et roles = " + roles);
+    	System.out.println("on est entré dans la méthode createToken du JwtProvider avec en parametre idrh = " + idrh + " et roles = " + roles);
+    	
+    	Utilisateur subject = (Utilisateur) userDetailsService.loadUserByUsername(idrh);
 
         Claims claims = Jwts.claims().setSubject(idrh);
         claims.put("auth", roles.stream().map(s -> s.getAuthority()).filter(Objects::nonNull).collect(Collectors.toList()));
+        claims.put("nom", (subject.getNom() + " " + subject.getPrenom()));
+        claims.put("equipe", subject.getEquipe().getLibelle());
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);

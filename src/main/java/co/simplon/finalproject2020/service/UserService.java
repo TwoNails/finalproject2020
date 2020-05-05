@@ -1,5 +1,6 @@
 package co.simplon.finalproject2020.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import co.simplon.finalproject2020.repository.UtilisateurDAO;
 import co.simplon.finalproject2020.security.JwtTokenProvider;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService, UtilisateurService {
 
 	@Autowired
 	private UtilisateurDAO utilisateurDAO;
@@ -31,6 +32,8 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired 
 	private PasswordEncoder passwordEncoder;
+	
+	// SECURITY RELATED
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -57,5 +60,36 @@ public class UserService implements UserDetailsService {
 		utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
 		return utilisateurDAO.saveAndFlush(utilisateur);
 	}
+	
+	
+	// CRUD
+
+	@Override
+	public Utilisateur findById(int id) throws Exception {
+		 Optional<Utilisateur> optUser = utilisateurDAO.findById(id);
+			if(optUser.isPresent()) {
+				return optUser.get();
+			} else {
+				throw new Exception("id can't be found in database");
+			}
+	 }
+	
+	@Override
+	public Utilisateur findByIdrh(String idrh) throws Exception {
+		Optional<Utilisateur> optUser = utilisateurDAO.findByIdentifiantRH(idrh);
+		if(optUser.isPresent()) {
+			return optUser.get();
+		} else {
+			throw new Exception("id can't be found in database");
+		}
+	}
+
+	@Override
+	public List<Utilisateur> findAll() {
+		return utilisateurDAO.findAll();
+	}
+
+	
+
 	
 }
