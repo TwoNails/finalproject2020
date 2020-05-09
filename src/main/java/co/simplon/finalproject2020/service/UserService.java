@@ -14,7 +14,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import co.simplon.finalproject2020.model.Equipe;
+import co.simplon.finalproject2020.model.JsonWebToken;
+import co.simplon.finalproject2020.model.ProfilUtilisateur;
 import co.simplon.finalproject2020.model.Utilisateur;
+import co.simplon.finalproject2020.model.criteria.UtilisateurCriteria;
+import co.simplon.finalproject2020.repository.CustomCriteriaUtilisateurRepository;
+import co.simplon.finalproject2020.repository.EquipeDAO;
+import co.simplon.finalproject2020.repository.RoleDAO;
 import co.simplon.finalproject2020.repository.UtilisateurDAO;
 import co.simplon.finalproject2020.security.JwtTokenProvider;
 
@@ -23,6 +30,15 @@ public class UserService implements UserDetailsService, UtilisateurService {
 
 	@Autowired
 	private UtilisateurDAO utilisateurDAO;
+	
+	@Autowired
+	private EquipeDAO equipeDAO;
+	
+	@Autowired
+	private RoleDAO roleDAO;
+	
+	@Autowired
+	private CustomCriteriaUtilisateurRepository ccRepository;
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -46,11 +62,11 @@ public class UserService implements UserDetailsService, UtilisateurService {
 		
 	}
 		
-	public String signIn(String idrh, String password) throws BadCredentialsException {
+	public JsonWebToken signIn(String idrh, String password) throws BadCredentialsException {
 		System.out.println("on est entré dans la méthode signIn de userService, avec les paramètres idrh = " + idrh + "et password = " + password);
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(idrh, password));
-			return jwtTokenProvider.createToken(idrh, utilisateurDAO.findByIdentifiantRH(idrh).get().getAuthorities());
+			return new JsonWebToken(jwtTokenProvider.createToken(idrh, utilisateurDAO.findByIdentifiantRH(idrh).get().getAuthorities())) ;
 		} catch (AuthenticationException e) {
 			throw new BadCredentialsException("L'IDRH ou le mot de passe est incorrect");
 		}
@@ -87,6 +103,56 @@ public class UserService implements UserDetailsService, UtilisateurService {
 	@Override
 	public List<Utilisateur> findAll() {
 		return utilisateurDAO.findAll();
+	}
+
+	@Override
+	public List<Utilisateur> findByCriteria(UtilisateurCriteria criteres) {
+		System.out.println(criteres);
+		return ccRepository.findAllWithCriteria(criteres);
+	}
+
+	@Override
+	public Utilisateur remove(String idrh) throws Exception {
+		Optional<Utilisateur> optUser = utilisateurDAO.findByIdentifiantRH(idrh);
+		if(optUser.isPresent()) {
+			Utilisateur userInBase = optUser.get();
+			System.out.println("we found the user : " + userInBase);
+			if(userInBase.getEstActif()) {
+				userInBase.setEstActif(false);
+				return utilisateurDAO.saveAndFlush(userInBase);
+			} else throw new Exception("user already inactive");
+			
+		} else {
+			throw new Exception("id can't be found in database");
+		}
+		
+	}
+
+	@Override
+	public Utilisateur update(String idrh, String role, String equipe) throws Exception {
+		Optional<Utilisateur> optUser = utilisateurDAO.findByIdentifiantRH(idrh);
+		Optional<Equipe> optEquipe = equipeDAO.findByLibelle(equipe);
+		Optional<ProfilUtilisateur> optRole = roleDAO.findByLibelle(role);
+		if(optUser.isPresent()) {
+			Utilisateur userInBase = optUser.get();
+			if(optEquipe.isPresent()) {
+				userInBase.setEquipe(optEquipe.get());
+			}
+			if(optRole.isPresent()) {
+				userInBase.getRoles().clear();
+				List<ProfilUtilisateur> allRoles = roleDAO.findAll();
+				for(int i = 0 ; i < allRoles.size() ; i++) {
+					if(allRoles.get(i).getId() <= optRole.get().getId()) {
+						userInBase.getRoles().add(allRoles.get(i));
+					}
+				}
+			}
+			
+			
+			return utilisateurDAO.saveAndFlush(userInBase);
+		} else {
+			throw new Exception("id can't be found in database");
+		}
 	}
 
 	

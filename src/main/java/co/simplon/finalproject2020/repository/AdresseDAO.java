@@ -1,7 +1,6 @@
-package co.simplon.finalproject2020.service;
+package co.simplon.finalproject2020.repository;
 
 import co.simplon.finalproject2020.model.Adresse;
-import co.simplon.finalproject2020.repository.DAO;
 
 public interface AdresseDAO extends DAO<Adresse> {
 

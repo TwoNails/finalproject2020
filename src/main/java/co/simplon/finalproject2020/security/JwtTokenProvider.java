@@ -68,9 +68,9 @@ public class JwtTokenProvider {
     	Utilisateur subject = (Utilisateur) userDetailsService.loadUserByUsername(idrh);
 
         Claims claims = Jwts.claims().setSubject(idrh);
-        claims.put("auth", roles.stream().map(s -> s.getAuthority()).filter(Objects::nonNull).collect(Collectors.toList()));
-        claims.put("nom", (subject.getNom() + " " + subject.getPrenom()));
-        claims.put("equipe", subject.getEquipe().getLibelle());
+        claims.put("auth", roles.stream().map(s -> s.getAuthority()).filter(Objects::nonNull).collect(Collectors.toList()));//roles /*roles.stream().map(s -> s.getAuthority()).filter(Objects::nonNull).collect(Collectors.toList())*/);
+        claims.put("name", (subject.getNom() + " " + subject.getPrenom()));
+        claims.put("team", subject.getEquipe().getLibelle());
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);

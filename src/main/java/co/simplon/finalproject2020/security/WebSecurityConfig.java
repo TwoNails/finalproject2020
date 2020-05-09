@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and().authorizeRequests()	.antMatchers("/**").permitAll()
 										//.antMatchers("/demande/**").permitAll()
 										//.antMatchers("/agent/**").permitAll()
-										//.antMatchers("/admin/**").hasAuthority("ADMIN")		// le endpoint "/admin" n'est accessible qui si le bearer a pour role : ADMIN dans le jwt.
+										//.antMatchers("/gestionnaire/**").hasAuthority("ADMIN")		// le endpoint "/admin" n'est accessible qui si le bearer a pour role : ADMIN dans le jwt.
 										/*.anyRequest().authenticated()*/;
 		
 		http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);

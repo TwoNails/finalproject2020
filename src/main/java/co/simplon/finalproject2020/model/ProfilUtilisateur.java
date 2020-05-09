@@ -1,10 +1,14 @@
 package co.simplon.finalproject2020.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -18,6 +22,9 @@ public class ProfilUtilisateur {
 	
 	@Column(name = "LROLE", nullable = false)
 	private String libelle;
+	
+	@ManyToMany(mappedBy = "roles")
+	private List<Utilisateur> posts = new ArrayList<>();
 
 	public int getId() {
 		return id;
@@ -62,6 +69,11 @@ public class ProfilUtilisateur {
 			return false;
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return libelle;
+	}
 
 	public ProfilUtilisateur(String libelle) {
 		this.libelle = libelle;
@@ -70,10 +82,8 @@ public class ProfilUtilisateur {
 	public ProfilUtilisateur() {
 	}
 	
-	
 	public String getAuthorities() {
 		return getLibelle();
 	}
-	
 	
 }

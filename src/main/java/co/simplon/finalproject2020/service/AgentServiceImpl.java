@@ -11,6 +11,7 @@ import co.simplon.finalproject2020.model.Agent;
 import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.criteria.AgentCriteria;
 import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
+import co.simplon.finalproject2020.repository.AdresseDAO;
 import co.simplon.finalproject2020.repository.AgentDAO;
 import co.simplon.finalproject2020.repository.CustomCriteriaAgentRepository;
 import co.simplon.finalproject2020.repository.CustomCriteriaDemandeRepository;

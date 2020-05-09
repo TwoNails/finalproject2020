@@ -8,8 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import co.simplon.finalproject2020.model.enums.NatureTypeDemande;
-
 @Entity
 public class TypeDemande {
 	
