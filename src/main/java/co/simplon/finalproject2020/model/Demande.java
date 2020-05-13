@@ -1,5 +1,6 @@
 package co.simplon.finalproject2020.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -16,13 +17,19 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import co.simplon.finalproject2020.model.AttachedDocument;
 
 @Entity
-public class Demande /* implements Serializable */ {
+public class Demande implements Serializable  {
 	
-	// static final long serialVersionUID = 1L;
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8542965774640916199L;
+
 	@Id
 	@Column(name = "ID_DEMANDE")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +63,7 @@ public class Demande /* implements Serializable */ {
 	
 	// relationships :
 	@OneToMany
-	@JoinColumn(name = "ID_DEMANDE")
+	@JsonIgnoreProperties("demande")
 	private List<AttachedDocument> listeDocuments;
 	
 	@ManyToOne
@@ -145,7 +152,7 @@ public class Demande /* implements Serializable */ {
 	public String toString() {
 		return "Demande [id=" + id + ", numero=" + numero + ", objet=" + objet + ", commentaire=" + commentaire
 				+ ", dateCreation=" + dateCreation + ", dateAttribution=" + dateAttribution + ", dateCloture="
-				+ dateCloture + ", dateEcheance=" + dateEcheance + ", listeDocuments=" + listeDocuments + ", origine="
+				+ dateCloture + ", dateEcheance=" + dateEcheance + ", origine="										// listeDocuments=" + listeDocuments + ", 
 				+ origine + ", type=" + type + ", nature=" + nature + ", statut=" + statut + ", agent=" + agent
 				+ ", responsable=" + responsable + "]";
 	}

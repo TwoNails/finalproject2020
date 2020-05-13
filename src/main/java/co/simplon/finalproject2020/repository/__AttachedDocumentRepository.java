@@ -10,8 +10,8 @@ import co.simplon.finalproject2020.model.AttachedDocument;
 
 public interface __AttachedDocumentRepository extends JpaRepository<AttachedDocument, Integer> {
 	
-	List<AttachedDocument> findByFileReferenceAndName(int fileReference, String name);
+	List<AttachedDocument> findByDemandeAndName(String demandeNumero, String name);
 	
-	List<AttachedDocument> findAllByFileReference(int fileReference);
+	List<AttachedDocument> findAllByDemande(String demandeNumero);
 	
 }

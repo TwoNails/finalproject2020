@@ -45,12 +45,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and().csrf().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and().authorizeRequests()	.antMatchers("/**").permitAll()
+										//.antMatchers("/h2-console/**").permitAll()
 										//.antMatchers("/demande/**").permitAll()
 										//.antMatchers("/agent/**").permitAll()
 										//.antMatchers("/gestionnaire/**").hasAuthority("ADMIN")		// le endpoint "/admin" n'est accessible qui si le bearer a pour role : ADMIN dans le jwt.
 										/*.anyRequest().authenticated()*/;
 		
 		http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+		http.headers().frameOptions().disable();
 	}
 	
 	/**

@@ -53,40 +53,40 @@ public class __FileUploadController {
 		this.storageService = storageService;
 	}
 	*/
-	@Autowired
-	private __AttachedDocumentRepository attachedDocumentRepository;
+//	@Autowired
+//	private __AttachedDocumentRepository attachedDocumentRepository;
+//	
+//	
+//	@GetMapping("/{demandeId}")
+//	public List <String> listUploadedFiles (@PathVariable int demandeId) {
+//		
+//		List<AttachedDocument> listStoredFiles = attachedDocumentRepository.findAllByFileReference(demandeId);
+//		List<String> listOfFileNames = new ArrayList<String>();
+//		
+//		for(AttachedDocument doc : listStoredFiles) {
+//			listOfFileNames.add(doc.getName());
+//		}	
+//		return listOfFileNames;
+//	}
 	
 	
-	@GetMapping("/{demandeId}")
-	public List <String> listUploadedFiles (@PathVariable int demandeId) {
-		
-		List<AttachedDocument> listStoredFiles = attachedDocumentRepository.findAllByFileReference(demandeId);
-		List<String> listOfFileNames = new ArrayList<String>();
-		
-		for(AttachedDocument doc : listStoredFiles) {
-			listOfFileNames.add(doc.getName());
-		}	
-		return listOfFileNames;
-	}
-	
-	
-	@GetMapping("/{demandeId}/{filename}")
-	@ResponseBody
-	public ResponseEntity<ByteArrayResource> serveFile(@PathVariable int demandeId, @PathVariable String filename){
-
-		List<AttachedDocument> doc = attachedDocumentRepository.findByFileReferenceAndName(demandeId, filename);
-		
-		if(doc.size() !=1) {
-			System.out.println("something is wrong either with the request or the base " + doc.size());
-			return null;
-		} else {
-			AttachedDocument docInBase = doc.get(0);
-			return ResponseEntity.ok()
-					.contentType(MediaType.parseMediaType(docInBase.getFileExtension()))
-					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +docInBase.getName() + "\"")
-					.body(new ByteArrayResource(docInBase.getContent()));
-		}
-	}
+//	@GetMapping("/{demandeId}/{filename}")
+//	@ResponseBody
+//	public ResponseEntity<ByteArrayResource> serveFile(@PathVariable int demandeId, @PathVariable String filename){
+//
+//		List<AttachedDocument> doc = attachedDocumentRepository.findByFileReferenceAndName(demandeId, filename);
+//		
+//		if(doc.size() !=1) {
+//			System.out.println("something is wrong either with the request or the base " + doc.size());
+//			return null;
+//		} else {
+//			AttachedDocument docInBase = doc.get(0);
+//			return ResponseEntity.ok()
+//					.contentType(MediaType.parseMediaType(docInBase.getFileExtension()))
+//					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +docInBase.getName() + "\"")
+//					.body(new ByteArrayResource(docInBase.getContent()));
+//		}
+//	}
 	
 	@PostMapping("/{demandeId}")
 	public void handleFileUpload(@PathVariable int demandeId, @RequestParam("file") MultipartFile file /*,  RedirectAttributes redirectAttributes */) {
@@ -104,21 +104,21 @@ public class __FileUploadController {
 		
 		/* TESTS : READING DATABASE AND CREATING IN LOCAL FILES A COPY OF THE DOCUMENT FROM THE DATA FETCHED */
 		
-		Optional<AttachedDocument> copyFromDataBase = attachedDocumentRepository.findById(1);
-		if(copyFromDataBase.isPresent()) {
-			AttachedDocument documentToCopy = copyFromDataBase.get();
-			File copy = new File("src/main/resources/" + documentToCopy.getName());		// we describe the route where we want to build the file
-			FileOutputStream fos2;
-			try {
-				fos2 = new FileOutputStream(copy);
-				fos2.write(documentToCopy.getContent());
-				fos2.flush();
-				fos2.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		Optional<AttachedDocument> copyFromDataBase = attachedDocumentRepository.findById(1);
+//		if(copyFromDataBase.isPresent()) {
+//			AttachedDocument documentToCopy = copyFromDataBase.get();
+//			File copy = new File("src/main/resources/" + documentToCopy.getName());		// we describe the route where we want to build the file
+//			FileOutputStream fos2;
+//			try {
+//				fos2 = new FileOutputStream(copy);
+//				fos2.write(documentToCopy.getContent());
+//				fos2.flush();
+//				fos2.close();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 		
 	}
 	

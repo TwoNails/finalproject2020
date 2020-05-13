@@ -21,8 +21,8 @@ import co.simplon.finalproject2020.model.Agent;
 import co.simplon.finalproject2020.model.Grade;
 import co.simplon.finalproject2020.model.criteria.AgentCriteria;
 import co.simplon.finalproject2020.service.AgentService;
-import co.simplon.finalproject2020.service.AgentServiceImpl;
 import co.simplon.finalproject2020.service.GradeService;
+import co.simplon.finalproject2020.service.impl.AgentServiceImpl;
 
 @RestController
 @RequestMapping("/agent")

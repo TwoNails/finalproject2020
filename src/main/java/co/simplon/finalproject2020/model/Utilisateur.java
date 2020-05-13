@@ -61,7 +61,7 @@ public class Utilisateur implements UserDetails {
 	
 	@ManyToMany
 	@JoinTable(name = "UTILISATEUR_ROLE",
-			joinColumns = @JoinColumn(name = "ID"),
+			joinColumns = @JoinColumn(name = "ID_UTILISATEUR"),
 	        inverseJoinColumns = @JoinColumn(name = "ID_ROLE"))
 	private List<ProfilUtilisateur> roles = new ArrayList<ProfilUtilisateur>();
 
@@ -277,6 +277,6 @@ public class Utilisateur implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-		return this.estActif;
+		return true; //this.estActif;
 	}	
 }

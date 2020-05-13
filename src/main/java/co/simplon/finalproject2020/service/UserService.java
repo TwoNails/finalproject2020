@@ -19,10 +19,10 @@ import co.simplon.finalproject2020.model.JsonWebToken;
 import co.simplon.finalproject2020.model.ProfilUtilisateur;
 import co.simplon.finalproject2020.model.Utilisateur;
 import co.simplon.finalproject2020.model.criteria.UtilisateurCriteria;
-import co.simplon.finalproject2020.repository.CustomCriteriaUtilisateurRepository;
 import co.simplon.finalproject2020.repository.EquipeDAO;
 import co.simplon.finalproject2020.repository.RoleDAO;
 import co.simplon.finalproject2020.repository.UtilisateurDAO;
+import co.simplon.finalproject2020.repository.criteria.CustomCriteriaUtilisateurRepository;
 import co.simplon.finalproject2020.security.JwtTokenProvider;
 
 @Service
@@ -68,6 +68,7 @@ public class UserService implements UserDetailsService, UtilisateurService {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(idrh, password));
 			return new JsonWebToken(jwtTokenProvider.createToken(idrh, utilisateurDAO.findByIdentifiantRH(idrh).get().getAuthorities())) ;
 		} catch (AuthenticationException e) {
+			System.out.println("Bad Credentials");
 			throw new BadCredentialsException("L'IDRH ou le mot de passe est incorrect");
 		}
 	}

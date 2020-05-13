@@ -31,7 +31,7 @@ public interface DemandeService {
 	
 	public Demande updateComment(String numero, String commentaire) throws Exception;
 	
-	
+	public void delete(String num) throws Exception;
 	
 	// UTILS
 	
@@ -49,5 +49,7 @@ public interface DemandeService {
 	 * @return a Demande Object identical in all aspects, except without any AttachedDocuments. 
 	 */
 	public Demande RemoveAttachedDocuments(Demande demandeToSlim);
+
+
 
 }

@@ -1,4 +1,4 @@
-package co.simplon.finalproject2020.repository;
+package co.simplon.finalproject2020.repository.criteria;
 
 import java.time.LocalDate;
 import java.time.Month;

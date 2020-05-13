@@ -1,4 +1,4 @@
-package co.simplon.finalproject2020.service;
+package co.simplon.finalproject2020.service.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,8 +13,9 @@ import co.simplon.finalproject2020.model.criteria.AgentCriteria;
 import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 import co.simplon.finalproject2020.repository.AdresseDAO;
 import co.simplon.finalproject2020.repository.AgentDAO;
-import co.simplon.finalproject2020.repository.CustomCriteriaAgentRepository;
-import co.simplon.finalproject2020.repository.CustomCriteriaDemandeRepository;
+import co.simplon.finalproject2020.repository.criteria.CustomCriteriaAgentRepository;
+import co.simplon.finalproject2020.repository.criteria.CustomCriteriaDemandeRepository;
+import co.simplon.finalproject2020.service.AgentService;
 
 
 @Service

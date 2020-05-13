@@ -1,4 +1,4 @@
-package co.simplon.finalproject2020.service;
+package co.simplon.finalproject2020.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import co.simplon.finalproject2020.model.TypeDemande;
 import co.simplon.finalproject2020.model.dto.TypeDemandeDTO;
 import co.simplon.finalproject2020.repository.TypeDemandeDAO;
+import co.simplon.finalproject2020.service.TypeDemandeService;
 
 @Service
 public class TypeDemandeServiceImpl implements TypeDemandeService {

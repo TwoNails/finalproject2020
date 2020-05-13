@@ -1,4 +1,4 @@
-package co.simplon.finalproject2020.service;
+package co.simplon.finalproject2020.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import co.simplon.finalproject2020.model.Branche;
 import co.simplon.finalproject2020.model.Statut;
 import co.simplon.finalproject2020.repository.BrancheDAO;
 import co.simplon.finalproject2020.repository.StatutDAO;
+import co.simplon.finalproject2020.service.BrancheService;
 
 @Service
 public class BrancheServiceImpl implements BrancheService {

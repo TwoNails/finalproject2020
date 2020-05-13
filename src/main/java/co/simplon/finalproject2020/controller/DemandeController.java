@@ -25,6 +25,7 @@ import co.simplon.finalproject2020.model.dto.TypeDemandeDTO;
 import co.simplon.finalproject2020.service.AgentService;
 import co.simplon.finalproject2020.service.BrancheService;
 import co.simplon.finalproject2020.service.DemandeService;
+import co.simplon.finalproject2020.service.DocumentService;
 import co.simplon.finalproject2020.service.OrigineService;
 import co.simplon.finalproject2020.service.StatutService;
 import co.simplon.finalproject2020.service.TypeDemandeService;
@@ -52,8 +53,10 @@ public class DemandeController {
 	@Autowired
 	BrancheService brancheService;
 	
-
+	@Autowired
+	DocumentService documentService;
 	
+
 	/**
 	 * CRUD (C) => Création d'un objet Demande en base
 	 * 
@@ -116,10 +119,17 @@ public class DemandeController {
 	@GetMapping("/{num}")
 	public ResponseEntity<Demande> getDemande(@PathVariable String num){
 		try {
-			return new ResponseEntity<Demande>(demandeService.findByNumero(num), HttpStatus.OK);
+			Demande demande = demandeService.findByNumero(num);
+			demandeService.RemoveAttachedDocuments(demande);
+			return new ResponseEntity<Demande>(demande, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Demande>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping("/documents/{num}/{nomdoc}")
+	public ResponseEntity<byte[]> getDocument(@PathVariable String num, @PathVariable String nomdoc){
+		return new ResponseEntity<byte[]>(documentService.getDocumentData(num, nomdoc), HttpStatus.OK);
 	}
 	
 	
@@ -178,10 +188,24 @@ public class DemandeController {
 		}
 	}
 	
+	/**
+	 * CRUD (D) => suppression d'une demande. (à remplacer par un changement de Statut => cloturée ?) 
+	 * @param num : le numéro de la demande qui sera modifiée
+	 * @return void
+	 */
+	@GetMapping("delete/{num}")
+	public ResponseEntity<?> delete(@PathVariable String num){
+		try {
+			demandeService.delete(num);
+			return ResponseEntity.noContent().build();
+		} catch (Exception e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
 	
+
 	
-	
-	// Listes d'options à proposer en menu déroulant
+	// Listes d'options à proposer en menu déroulant (ou, dans le cas des pièces jointes, liste des noms des pièces en base)
 	
 	@GetMapping("/origines")
 	public ResponseEntity<List<String>> getManualOrigines() {								
@@ -206,5 +230,12 @@ public class DemandeController {
 	public ResponseEntity<List<String>> getBranches() {
 		return new ResponseEntity<List<String>>(brancheService.findAll(), HttpStatus.OK);
 	}
+	
+	@GetMapping("/documents/{numeroDemande}")
+	public ResponseEntity<List<String>> getDocuments(@PathVariable String numeroDemande) {
+		return new ResponseEntity<List<String>>(documentService.findNamesByDemandeNumero(numeroDemande), HttpStatus.OK);
+	}
+	
+	
 	
 }

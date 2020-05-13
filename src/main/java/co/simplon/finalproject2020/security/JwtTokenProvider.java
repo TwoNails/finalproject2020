@@ -66,6 +66,8 @@ public class JwtTokenProvider {
     	System.out.println("on est entré dans la méthode createToken du JwtProvider avec en parametre idrh = " + idrh + " et roles = " + roles);
     	
     	Utilisateur subject = (Utilisateur) userDetailsService.loadUserByUsername(idrh);
+    	
+    	System.out.println("On a bien récupéré un Utilisateur. Verifier que idTeam et estActif ne sont pas Null ! : " + subject);
 
         Claims claims = Jwts.claims().setSubject(idrh);
         claims.put("auth", roles.stream().map(s -> s.getAuthority()).filter(Objects::nonNull).collect(Collectors.toList()));//roles /*roles.stream().map(s -> s.getAuthority()).filter(Objects::nonNull).collect(Collectors.toList())*/);

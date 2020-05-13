@@ -1,4 +1,4 @@
-package co.simplon.finalproject2020.service;
+package co.simplon.finalproject2020.service.impl;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -23,14 +23,15 @@ import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 import co.simplon.finalproject2020.model.dto.DemandeDTO;
 import co.simplon.finalproject2020.repository.AgentDAO;
 import co.simplon.finalproject2020.repository.AttachedDocumentDAO;
-import co.simplon.finalproject2020.repository.CustomCriteriaDemandeRepository;
-import co.simplon.finalproject2020.repository.CustomCriteriaRepository;
 //import co.simplon.finalproject2020.repository.CustomCriteriaDemandeRepository;
 import co.simplon.finalproject2020.repository.DemandeDAO;
 import co.simplon.finalproject2020.repository.OrigineDAO;
 import co.simplon.finalproject2020.repository.StatutDAO;
 import co.simplon.finalproject2020.repository.TypeDemandeDAO;
 import co.simplon.finalproject2020.repository.UtilisateurDAO;
+import co.simplon.finalproject2020.repository.criteria.CustomCriteriaDemandeRepository;
+import co.simplon.finalproject2020.repository.criteria.CustomCriteriaRepository;
+import co.simplon.finalproject2020.service.DemandeService;
 
 @Service
 public class DemandeServiceImpl implements DemandeService {
@@ -113,6 +114,15 @@ public class DemandeServiceImpl implements DemandeService {
 			throw e;
 		}
 	}
+	
+	@Override
+	public void delete(String num) throws Exception {
+		Optional<Demande> optDemande = demandeDAO.findByNumero(num);
+		if(optDemande.isPresent()) {
+			demandeDAO.deleteById(optDemande.get().getId());
+		}
+		
+	}
 
 	
 	// UTILS
@@ -194,15 +204,18 @@ public class DemandeServiceImpl implements DemandeService {
 		
 		if(optDemande.isPresent()) {
 			Demande demandeConcernee = optDemande.get();
-			for (MultipartFile file : files) {
-				try {
-					AttachedDocument docToSave = new AttachedDocument(file.getOriginalFilename(), file.getContentType(), demandeConcernee, file.getBytes());
-					attachedDocumentDAO.saveAndFlush(docToSave);
-				} catch (IOException e) {
-					// TODO: handle exception
-				}
+			try {
+				for (MultipartFile file : files) {
+						AttachedDocument docToSave = new AttachedDocument(file.getOriginalFilename(), file.getContentType(), demandeConcernee, file.getBytes());
+						demandeConcernee.getListeDocuments().add(docToSave);
+						attachedDocumentDAO.saveAndFlush(docToSave);
+						
+				} 
+			} catch (IOException e) {
+				// TODO: handle exception
 				
 			}
+			demandeDAO.saveAndFlush(demandeConcernee);
 			return true;
 		} else {
 			return false;

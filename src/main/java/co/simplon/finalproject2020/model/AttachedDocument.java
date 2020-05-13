@@ -32,7 +32,7 @@ public class AttachedDocument {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(referencedColumnName = "NNUMERO")
-	private Demande fileReference;			// référence du dossier auquel la piece jointe est associée
+	private Demande demande;			// référence du dossier auquel la piece jointe est associée
 	
 	@Lob // for Large Objects
 	@Column(nullable=false, columnDefinition="MEDIUMBLOB") // columnDefinition not working, though 'nullable = false' did up me from tinyblob to blob
@@ -45,15 +45,15 @@ public class AttachedDocument {
 	public AttachedDocument() {
 	}
 
-	public AttachedDocument(Demande fileReference, byte[] content) {
-		this.fileReference = fileReference;
+	public AttachedDocument(Demande demande, byte[] content) {
+		this.demande = demande;
 		this.content = content;
 	}
 
-	public AttachedDocument(String name, String fileExtension, Demande fileReference, byte[] content) {
+	public AttachedDocument(String name, String fileExtension, Demande demande, byte[] content) {
 		this.name = name;
 		this.fileExtension = fileExtension;
-		this.fileReference = fileReference;
+		this.demande = demande;
 		this.content = content;
 	}	
 	
@@ -61,8 +61,8 @@ public class AttachedDocument {
 
 	@Override
 	public String toString() {
-		return "AttachedDocument [id=" + id + ", name=" + name + ", fileExtension=" + fileExtension + ", fileReference="
-				+ fileReference + ", content=" + Arrays.toString(content) + "]";
+		return "AttachedDocument [id=" + id + ", name=" + name + ", fileExtension=" + fileExtension + ", demande="
+				+ demande + ", content length=" + content.length + "]";
 	}
 	
 	@Override
@@ -71,7 +71,7 @@ public class AttachedDocument {
 		int result = 1;
 		result = prime * result + Arrays.hashCode(content);
 		result = prime * result + ((fileExtension == null) ? 0 : fileExtension.hashCode());
-		result = prime * result + ((fileReference == null) ? 0 : fileReference.hashCode());
+		result = prime * result + ((demande == null) ? 0 : demande.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -93,7 +93,7 @@ public class AttachedDocument {
 				return false;
 		} else if (!fileExtension.equals(other.fileExtension))
 			return false;
-		if (fileReference != other.fileReference)
+		if (demande != other.demande)
 			return false;
 		if (id != other.id)
 			return false;
@@ -131,11 +131,11 @@ public class AttachedDocument {
 	}
 
 	public Demande getFileReference() {
-		return fileReference;
+		return demande;
 	}
 
 	public void setFileReference(Demande fileReference) {
-		this.fileReference = fileReference;
+		this.demande = fileReference;
 	}
 
 	public byte[] getContent() {

@@ -1,4 +1,4 @@
-package co.simplon.finalproject2020.service;
+package co.simplon.finalproject2020.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import co.simplon.finalproject2020.model.Grade;
 import co.simplon.finalproject2020.repository.GradeDAO;
+import co.simplon.finalproject2020.service.GradeService;
 
 @Service
 public class GradeServiceImpl implements GradeService {
