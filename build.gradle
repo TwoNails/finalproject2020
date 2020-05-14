@@ -31,10 +31,10 @@ dependencies {
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
 	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.10.Final'
     
-	// runtimeOnly 'mysql:mysql-connector-java' //runtimeOnly 'com.h2database:h2'	// non prod
+	 runtimeOnly 'mysql:mysql-connector-java' //runtimeOnly 'com.h2database:h2'	// Non prod
 	
 	//	runtimeOnly 'mysql:mysql-connector-java'
-	implementation group: 'com.h2database', name: 'h2', version: '1.4.200'			// Mise en prod
+	// implementation group: 'com.h2database', name: 'h2', version: '1.4.200'			// Mise en prod
 	
 	
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {

@@ -11,5 +11,5 @@ public interface DocumentService {
 	
 	public AttachedDocument findByName(String name);
 
-	public byte[] getDocumentData(String numeroDemande, String nomDocument);
+	public AttachedDocument findByDemandeAndName(String numeroDemande, String nomDocument);
 }

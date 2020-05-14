@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import co.simplon.finalproject2020.model.AttachedDocument;
 import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.Statut;
 import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
@@ -128,8 +132,12 @@ public class DemandeController {
 	}
 	
 	@GetMapping("/documents/{num}/{nomdoc}")
-	public ResponseEntity<byte[]> getDocument(@PathVariable String num, @PathVariable String nomdoc){
-		return new ResponseEntity<byte[]>(documentService.getDocumentData(num, nomdoc), HttpStatus.OK);
+	public ResponseEntity<ByteArrayResource> getDocument(@PathVariable String num, @PathVariable String nomdoc){
+		AttachedDocument docInBase = documentService.findByDemandeAndName(num, nomdoc);
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(docInBase.getFileExtension()))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +docInBase.getName() + "\"")
+				.body(new ByteArrayResource(docInBase.getContent()));
 	}
 	
 	

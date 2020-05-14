@@ -44,10 +44,10 @@ public class DocumentServiceImpl implements DocumentService {
 	}
 
 	@Override
-	public byte[] getDocumentData(String numeroDemande, String nomDocument) {
+	public AttachedDocument findByDemandeAndName(String numeroDemande, String nomDocument) {
 		System.out.println("nom doc : " + nomDocument);
 		Optional<Demande> optDemande = demandeDAO.findByNumero(numeroDemande);
 		System.out.println("document : " + documentDAO.findByDemandeAndName(optDemande.get(), nomDocument));
-		return documentDAO.findByDemandeAndName(optDemande.get(), nomDocument).getContent();
+		return documentDAO.findByDemandeAndName(optDemande.get(), nomDocument);
 	}
 }
