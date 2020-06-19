@@ -1,4 +1,4 @@
-package co.simplon.finalproject2020.model;
+package co.simplon.finalproject2020.security;
 
 public class JsonWebToken {
 	

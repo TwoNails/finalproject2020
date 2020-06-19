@@ -50,26 +50,15 @@ public class Utilisateur implements UserDetails {
 	
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // permet de ne pas afficher le pw dans le json
 	private String password;
+
 	
-	/*
-	@ElementCollection
-	@CollectionTable(
-			name = "tableProfilsUtilisateur",
-			joinColumns = @JoinColumn(name = "id_utilisateur")
-	)
-	@Column(name = "ProfilId") */
-	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "UTILISATEUR_ROLE",
 			joinColumns = @JoinColumn(name = "ID_UTILISATEUR"),
 	        inverseJoinColumns = @JoinColumn(name = "ID_ROLE"))
 	private List<ProfilUtilisateur> roles = new ArrayList<ProfilUtilisateur>();
 
-	// @ManyToMany(cascade = { CascadeType.ALL })
-	// @JoinTable(
-	//name = "
-	//)
-	// private List<ProfilUtilisateur> 
+
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_EQUIPE", referencedColumnName = "ID_EQUIPE")

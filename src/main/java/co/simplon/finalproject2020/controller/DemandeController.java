@@ -1,11 +1,14 @@
 package co.simplon.finalproject2020.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +33,7 @@ import co.simplon.finalproject2020.service.AgentService;
 import co.simplon.finalproject2020.service.BrancheService;
 import co.simplon.finalproject2020.service.DemandeService;
 import co.simplon.finalproject2020.service.DocumentService;
+import co.simplon.finalproject2020.service.ExcelService;
 import co.simplon.finalproject2020.service.OrigineService;
 import co.simplon.finalproject2020.service.StatutService;
 import co.simplon.finalproject2020.service.TypeDemandeService;
@@ -60,6 +64,12 @@ public class DemandeController {
 	@Autowired
 	DocumentService documentService;
 	
+	@Autowired
+	ExcelService excelService;
+	
+	
+	
+	// Méthodes CRUD sur l'entité Demande
 
 	/**
 	 * CRUD (C) => Création d'un objet Demande en base
@@ -131,36 +141,7 @@ public class DemandeController {
 		}
 	}
 	
-	@GetMapping("/documents/{num}/{nomdoc}")
-	public ResponseEntity<ByteArrayResource> getDocument(@PathVariable String num, @PathVariable String nomdoc){
-		AttachedDocument docInBase = documentService.findByDemandeAndName(num, nomdoc);
-		return ResponseEntity.ok()
-				.contentType(MediaType.parseMediaType(docInBase.getFileExtension()))
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +docInBase.getName() + "\"")
-				.body(new ByteArrayResource(docInBase.getContent()));
-	}
 	
-	
-	/**
-	 * CRUD (U) => Mise à jour des pièces jointes
-	 * 
-	 * @param num
-	 * @param files
-	 * @return
-	 */
-	@PostMapping("/documents/{num}")
-	public ResponseEntity<Boolean> addDocuments(@PathVariable String num ,@RequestParam("files") List<MultipartFile> files) {
-		
-		// TODO IN THE SERVICE : search the demande by Num. Instanciate an AttachedDoc for each file on the list and add them to the demande list of Attached Documents. Save&Flush.
-		
-		try {
-			return new ResponseEntity<Boolean>(demandeService.addDocuments(num, files), HttpStatus.OK);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new ResponseEntity<Boolean>(false, HttpStatus.PAYLOAD_TOO_LARGE);
-		}
-	}
 	
 	/**
 	 * CRUD (U) => ajout ou mise à jour du responsable de la demande
@@ -196,6 +177,16 @@ public class DemandeController {
 		}
 	}
 	
+	@GetMapping("/close/{num}")
+	public ResponseEntity<Demande> closeDemande(@PathVariable String num) {
+		try {
+			return new ResponseEntity<Demande>(demandeService.closeDemande(num), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Demande>(HttpStatus.NOT_FOUND);
+		}
+		
+	}
+	
 	/**
 	 * CRUD (D) => suppression d'une demande. (à remplacer par un changement de Statut => cloturée ?) 
 	 * @param num : le numéro de la demande qui sera modifiée
@@ -211,9 +202,79 @@ public class DemandeController {
 		}
 	}
 	
+	
+	
+	
+	/**********************************************************************************************************************************************************************/
+	
+	
+	// Méthodes de traitement des documents. 
+	//  - Lecture et écriture en base (Pièces jointes des demandes)
+	//	- Génération (Excel)
+	
+	/**
+	 * CRUD (R) => Téléchargement d'une pièce jointe
+	 * 
+	 * @param num
+	 * @param nomdoc
+	 * @return
+	 */
+	@GetMapping("/documents/{num}/{docname}")
+	public ResponseEntity<ByteArrayResource> getDocument(@PathVariable String num, @PathVariable String docname){
+		AttachedDocument docInBase = documentService.findByDemandeAndName(num, docname);
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(docInBase.getFileExtension()))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +docInBase.getName() + "\"")
+				.body(new ByteArrayResource(docInBase.getContent()));
+	}
+	
+	
+	/**
+	 * CRUD (C/U) => Ajout / Mise à jour des pièces jointes
+	 * 
+	 * @param num
+	 * @param files
+	 * @return
+	 */
+	@PostMapping("/documents/{num}")
+	public ResponseEntity<Boolean> addDocuments(@PathVariable String num ,@RequestParam("files") List<MultipartFile> files) {
+				
+		try {
+			return new ResponseEntity<Boolean>(demandeService.addDocuments(num, files), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.PAYLOAD_TOO_LARGE);
+		}
+	}
+	
+	
 
 	
-	// Listes d'options à proposer en menu déroulant (ou, dans le cas des pièces jointes, liste des noms des pièces en base)
+	@PostMapping("/excel/demandesearch")
+	public ResponseEntity<InputStreamResource> getExcelFromSearchResults(@RequestBody DemandeCriteria criteres){	
+		List<Demande> listDemandes = demandeService.findByCriteria(criteres);
+		
+		String filename = "RechercheDemande_" + LocalDate.now().getDayOfMonth() + "" + LocalDate.now().getMonthValue() + ".xlsx";
+		
+		HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+        
+        try {
+        ByteArrayInputStream baisBody = excelService.excelFileFromDemandeSearch(listDemandes);
+		
+			return ResponseEntity.ok()
+					.headers(headers)
+					.body(new InputStreamResource(baisBody));
+					
+		} catch (IOException e) {
+			return new ResponseEntity<InputStreamResource>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	/**********************************************************************************************************************************************************************/
+	
+	
+	// Methodes de lecture destinées à produire des listes d'options à proposer en menu déroulant
+	// Dans le cas des pièces jointes, liste des noms des pièces en base
 	
 	@GetMapping("/origines")
 	public ResponseEntity<List<String>> getManualOrigines() {								
@@ -245,5 +306,8 @@ public class DemandeController {
 	}
 	
 	
+	
+	
+	/*****************************************************************************************************************************************************************************/
 	
 }

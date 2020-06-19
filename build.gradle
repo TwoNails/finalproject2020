@@ -30,6 +30,9 @@ dependencies {
     
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
 	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.10.Final'
+	
+	// https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
+	compile group: 'com.jayway.jsonpath', name: 'json-path', version: '0.8.2.fix24'
     
 	 runtimeOnly 'mysql:mysql-connector-java' //runtimeOnly 'com.h2database:h2'	// Non prod
 	
@@ -41,6 +44,8 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	
 }
 
 test {

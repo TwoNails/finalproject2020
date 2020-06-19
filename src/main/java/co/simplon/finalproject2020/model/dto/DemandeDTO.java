@@ -8,36 +8,30 @@ import co.simplon.finalproject2020.model.AttachedDocument;
 // mappe le JSON reçu depuis le formulaire de création d'une demande.
 public class DemandeDTO {
 		
-		// idrh de l'agent concerné par la demande
+		// idrh de l'agent concerné par la demande.
 		private String idrh;
 		
-		// libellé du type de la demande. Permettra de décrire et le type et la nature de la demande
+		// libellé du type de la demande. Permettra de décrire et le type et la nature de la demande.
 		private String codeType;
 		
 		private String objet;
 		
 		private String origine;
 		
-		// matricule du gestionnaire a qui est attribuée la demande. optionnel
+		// matricule du gestionnaire à qui est attribuée la demande. Optionnel.
 		private String matriculeGestionnaire;
-		
-		// liste des pieces jointes à la demande
-		// private List<AttachedDocument> listeDocuments;
 
-		
 		
 		// CONSTRUCTORS	
 		public DemandeDTO() {
 		}
 
-		public DemandeDTO(String idrh, String libelleType, String objet, String origine, String matriculeGestionnaire/*,
-				List<AttachedDocument> listeDocuments*/) {
+		public DemandeDTO(String idrh, String codeType, String objet, String origine, String matriculeGestionnaire) {
 			this.idrh = idrh;
-			this.codeType = libelleType;
+			this.codeType = codeType;
 			this.objet = objet;
 			this.origine = origine;
 			this.matriculeGestionnaire = matriculeGestionnaire;
-			//this.listeDocuments = listeDocuments;
 		}
 		
 		

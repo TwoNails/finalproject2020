@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 import co.simplon.finalproject2020.exception.InvalidJWTException;
 import co.simplon.finalproject2020.model.Utilisateur;
-import co.simplon.finalproject2020.model.enums.ProfilUtilisateur;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -63,25 +63,23 @@ public class JwtTokenProvider {
      */
     public String createToken(String idrh, Collection<? extends GrantedAuthority> roles) {
     	
-    	System.out.println("on est entré dans la méthode createToken du JwtProvider avec en parametre idrh = " + idrh + " et roles = " + roles);
-    	
     	Utilisateur subject = (Utilisateur) userDetailsService.loadUserByUsername(idrh);
     	
     	System.out.println("On a bien récupéré un Utilisateur. Verifier que idTeam et estActif ne sont pas Null ! : " + subject);
 
         Claims claims = Jwts.claims().setSubject(idrh);
-        claims.put("auth", roles.stream().map(s -> s.getAuthority()).filter(Objects::nonNull).collect(Collectors.toList()));//roles /*roles.stream().map(s -> s.getAuthority()).filter(Objects::nonNull).collect(Collectors.toList())*/);
+        claims.put("auth", roles.stream().map(s -> s.getAuthority()).filter(Objects::nonNull).collect(Collectors.toList()));
         claims.put("name", (subject.getNom() + " " + subject.getPrenom()));
         claims.put("team", subject.getEquipe().getLibelle());
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-        return Jwts.builder()//
-                .setClaims(claims)//
-                .setIssuedAt(now)//
-                .setExpiration(validity)//
-                .signWith(SignatureAlgorithm.HS256, secretKey)//
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
     
@@ -114,6 +112,7 @@ public class JwtTokenProvider {
      */
     public String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
+        System.out.println(bearerToken);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

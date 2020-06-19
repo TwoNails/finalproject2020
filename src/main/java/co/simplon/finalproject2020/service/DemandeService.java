@@ -33,6 +33,8 @@ public interface DemandeService {
 	
 	public void delete(String num) throws Exception;
 	
+	public Demande closeDemande(String num) throws Exception;
+	
 	// UTILS
 	
 	/**
@@ -49,7 +51,5 @@ public interface DemandeService {
 	 * @return a Demande Object identical in all aspects, except without any AttachedDocuments. 
 	 */
 	public Demande RemoveAttachedDocuments(Demande demandeToSlim);
-
-
 
 }

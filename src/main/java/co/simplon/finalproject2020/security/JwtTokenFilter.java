@@ -38,7 +38,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             httpServletResponse.sendError(HttpStatus.BAD_REQUEST.value(), "Invalid JWT provided");
             return;
         }
-
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }

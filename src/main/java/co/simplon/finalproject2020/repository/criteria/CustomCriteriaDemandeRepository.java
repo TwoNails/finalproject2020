@@ -18,4 +18,8 @@ public interface CustomCriteriaDemandeRepository extends CustomCriteriaRepositor
 
 	public List<Demande> findAllWithCriteria(DemandeCriteria criteres); // eventually we'll have to make all Criteria models inherit from an abstract Class and use this one here instead of DemandeCrit
 
+	public Long countDemandesOfNature(String nature);
+	
+	public List<Demande> findAllWithNature(String nature);
+
 }

@@ -25,9 +25,6 @@ import co.simplon.finalproject2020.model.AttachedDocument;
 @Entity
 public class Demande implements Serializable  {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8542965774640916199L;
 
 	@Id
@@ -35,14 +32,14 @@ public class Demande implements Serializable  {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	// généré par le service lors de l'instanciation. Les deux premiers chiffres dépendent de la nature (01 à 05), les deux suivants représentent l'année en cours et les 4 suivants s'incrémentent.
+	// généré par le service lors de l'instanciation. Les deux premiers chiffres dépendent de la nature (01, 21, 22, 41, 61), les deux suivants représentent l'année en cours et les 4 suivants s'incrémentent.
 	@Column(name = "NNUMERO", nullable = false)
 	private String numero;
 	
 	@Column(name = "OBJET")
 	private String objet;
 	
-	@Column(name = "LCOMMENT", nullable = true/*, columnDefinition = "CLOB"*/)
+	@Column(name = "LCOMMENT", nullable = true)
 	private String commentaire;
 	
 	// dates :
@@ -50,14 +47,10 @@ public class Demande implements Serializable  {
 	// @Temporal(TemporalType.DATE) apparently not ok with LocalDate (java.time) and rather used with Date (java.util)
 	private LocalDate dateCreation;
 	
-//	@Column(name = "DATTRIBUTION", nullable = false)
 	private LocalDate dateAttribution;
 	
-//	@Column(name = "DCLOTURE", nullable = false)
 	private LocalDate dateCloture;
 
-	/* Will be calculated at creation, its value will depend of the demand's nature */
-//	@Column(name = "DECHEANCE", nullable = true)
 	private LocalDate dateEcheance;
 	
 	

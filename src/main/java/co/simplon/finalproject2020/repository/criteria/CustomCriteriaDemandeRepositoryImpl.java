@@ -91,7 +91,7 @@ public class CustomCriteriaDemandeRepositoryImpl implements CustomCriteriaDemand
 		}
 
 		if(criteres.getBranche() != null) {
-			predicates.add(cb.equal(brancheJoin.get("code"), criteres.getBranche()));
+			predicates.add(cb.equal(brancheJoin.get("libelle"), criteres.getBranche()));
 		}
 		
 		if(criteres.getObjet() != null) {
@@ -113,6 +113,28 @@ public class CustomCriteriaDemandeRepositoryImpl implements CustomCriteriaDemand
 		// we create the query and store it in the appropriate Java Object TypedQuery
 		TypedQuery<Demande> query = em.createQuery(critquery);
 		// we return the results
+		return query.getResultList();
+	}
+	
+	@Override
+	public Long countDemandesOfNature(String nature) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Long> critquery = cb.createQuery(Long.class);
+		Root<Demande> demandeRoot = critquery.from(Demande.class);
+		Join<Demande, Nature> natureJoin = demandeRoot.join("nature");
+		critquery.select(cb.count(critquery.from(Demande.class)));
+		critquery.where(cb.equal(natureJoin.get("code"), nature));
+		return em.createQuery(critquery).getSingleResult();
+	}
+
+	@Override
+	public List<Demande> findAllWithNature(String nature) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Demande> critquery = cb.createQuery(Demande.class);
+		Root<Demande> demandeRoot = critquery.from(Demande.class);
+		Join<Demande, Nature> natureJoin = demandeRoot.join("nature");
+		critquery.select(demandeRoot).where(cb.equal(natureJoin.get("code"), nature));
+		TypedQuery<Demande> query = em.createQuery(critquery);
 		return query.getResultList();
 	}
 }

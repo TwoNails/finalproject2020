@@ -44,31 +44,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors()
 			.and().csrf().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and().authorizeRequests()	.antMatchers("/**").permitAll()
-										//.antMatchers("/h2-console/**").permitAll()
-										//.antMatchers("/demande/**").permitAll()
-										//.antMatchers("/agent/**").permitAll()
-										//.antMatchers("/gestionnaire/**").hasAuthority("ADMIN")		// le endpoint "/admin" n'est accessible qui si le bearer a pour role : ADMIN dans le jwt.
-										/*.anyRequest().authenticated()*/;
+			.and().authorizeRequests()							
+										.antMatchers("/utilisateur/login").permitAll()
+										.antMatchers("/utilisateur/**").hasAuthority("Admin")	
+										.anyRequest().authenticated();
 		
 		http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 		http.headers().frameOptions().disable();
 	}
 	
-	/**
-	 * 
-	 */
-	
-	/*
-	@Override
-	public void configure(WebSecurity) throws Exception {
-		web.ignoring().antMatchers("/ressources/**");
-	}
-	*/
-	
-	/**
-	 * 
-	 */
+
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		final CorsConfiguration configuration = new CorsConfiguration();

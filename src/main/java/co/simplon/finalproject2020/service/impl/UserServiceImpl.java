@@ -1,5 +1,6 @@
-package co.simplon.finalproject2020.service;
+package co.simplon.finalproject2020.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,19 +15,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import co.simplon.finalproject2020.model.Agent;
 import co.simplon.finalproject2020.model.Equipe;
-import co.simplon.finalproject2020.model.JsonWebToken;
 import co.simplon.finalproject2020.model.ProfilUtilisateur;
 import co.simplon.finalproject2020.model.Utilisateur;
 import co.simplon.finalproject2020.model.criteria.UtilisateurCriteria;
+import co.simplon.finalproject2020.model.dto.SignupDTO;
+import co.simplon.finalproject2020.repository.AgentDAO;
 import co.simplon.finalproject2020.repository.EquipeDAO;
 import co.simplon.finalproject2020.repository.RoleDAO;
 import co.simplon.finalproject2020.repository.UtilisateurDAO;
 import co.simplon.finalproject2020.repository.criteria.CustomCriteriaUtilisateurRepository;
+import co.simplon.finalproject2020.security.JsonWebToken;
 import co.simplon.finalproject2020.security.JwtTokenProvider;
+import co.simplon.finalproject2020.service.UtilisateurService;
 
 @Service
-public class UserService implements UserDetailsService, UtilisateurService {
+public class UserServiceImpl implements UserDetailsService, UtilisateurService {
 
 	@Autowired
 	private UtilisateurDAO utilisateurDAO;
@@ -36,6 +41,9 @@ public class UserService implements UserDetailsService, UtilisateurService {
 	
 	@Autowired
 	private RoleDAO roleDAO;
+	
+	@Autowired
+	private AgentDAO agentDAO;
 	
 	@Autowired
 	private CustomCriteriaUtilisateurRepository ccRepository;
@@ -73,8 +81,9 @@ public class UserService implements UserDetailsService, UtilisateurService {
 		}
 	}
 	
-	public Utilisateur signUp(Utilisateur utilisateur) {
-		utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
+	public Utilisateur signUp(SignupDTO signupDTO) throws Exception {
+		Utilisateur utilisateur = this.dtoToUtilisateur(signupDTO);
+		utilisateur.setPassword(passwordEncoder.encode(utilisateur.getIdentifiantRH()));
 		return utilisateurDAO.saveAndFlush(utilisateur);
 	}
 	
@@ -156,7 +165,27 @@ public class UserService implements UserDetailsService, UtilisateurService {
 		}
 	}
 
+	// UTILS
 	
+	public Utilisateur dtoToUtilisateur(SignupDTO signupDTO) throws Exception {
+		Optional<Utilisateur> optIdrh = utilisateurDAO.findByIdentifiantRH(signupDTO.getIdentifiantRH());
+		Optional<Agent> optAgent = agentDAO.findByIdentifiantRH(signupDTO.getIdentifiantRH());
+		Optional<Equipe> optEquipe = equipeDAO.findByLibelle(signupDTO.getEquipe());
+		Optional<ProfilUtilisateur> optRoleSaisie = roleDAO.findByLibelle("Saisie");
+		Optional<ProfilUtilisateur> optRoleGestion = roleDAO.findByLibelle("Gestionnaire");
+		
+		if(optIdrh.isEmpty() || optEquipe.isPresent() || optRoleSaisie.isPresent() || optRoleGestion.isPresent()) {
+			List<ProfilUtilisateur> listRoles = Arrays.asList(optRoleSaisie.get(), optRoleGestion.get());
+			if(optAgent.isEmpty()) {
+				return new Utilisateur(signupDTO.getIdentifiantRH(), "", "", true, signupDTO.getIdentifiantRH(), listRoles, optEquipe.get());
+			} else {
+				return new Utilisateur(signupDTO.getIdentifiantRH(), optAgent.get().getNom(), optAgent.get().getPrenom(), true, signupDTO.getIdentifiantRH(), listRoles, optEquipe.get());
+			}
+		} else {
+			throw new Exception();
+		}
+		
+	}
 
 	
 }

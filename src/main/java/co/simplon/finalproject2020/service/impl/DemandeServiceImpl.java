@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import co.simplon.finalproject2020.model.Agent;
 import co.simplon.finalproject2020.model.AttachedDocument;
+import co.simplon.finalproject2020.model.ChangementStatut;
 import co.simplon.finalproject2020.model.Demande;
 import co.simplon.finalproject2020.model.Origine;
 import co.simplon.finalproject2020.model.Statut;
@@ -23,6 +24,7 @@ import co.simplon.finalproject2020.model.criteria.DemandeCriteria;
 import co.simplon.finalproject2020.model.dto.DemandeDTO;
 import co.simplon.finalproject2020.repository.AgentDAO;
 import co.simplon.finalproject2020.repository.AttachedDocumentDAO;
+import co.simplon.finalproject2020.repository.ChangementStatutDAO;
 //import co.simplon.finalproject2020.repository.CustomCriteriaDemandeRepository;
 import co.simplon.finalproject2020.repository.DemandeDAO;
 import co.simplon.finalproject2020.repository.OrigineDAO;
@@ -31,12 +33,14 @@ import co.simplon.finalproject2020.repository.TypeDemandeDAO;
 import co.simplon.finalproject2020.repository.UtilisateurDAO;
 import co.simplon.finalproject2020.repository.criteria.CustomCriteriaDemandeRepository;
 import co.simplon.finalproject2020.repository.criteria.CustomCriteriaRepository;
+import co.simplon.finalproject2020.service.ChangementStatutService;
 import co.simplon.finalproject2020.service.DemandeService;
+import io.jsonwebtoken.lang.Collections;
 
 @Service
 public class DemandeServiceImpl implements DemandeService {
 	
-	public static Integer incrementNumBase = 0;
+	// public static Integer incrementNumBase = 0;
 	
 	
 	@Autowired
@@ -61,7 +65,10 @@ public class DemandeServiceImpl implements DemandeService {
 	private AttachedDocumentDAO attachedDocumentDAO;
 	
 	@Autowired
-	private CustomCriteriaDemandeRepository ccRepository; 
+	private CustomCriteriaDemandeRepository ccRepository;
+	
+	@Autowired
+	private ChangementStatutDAO cgtStatutDAO;
 	
 	/*
 	 * Field ccRepository in co.simplon.finalproject2020.service.DemandeServiceImpl required a single bean, but 2 were found:
@@ -80,9 +87,7 @@ public class DemandeServiceImpl implements DemandeService {
 	
 	@Override
 	public List<Demande> findByCriteria(DemandeCriteria criteres) {
-		// return demandeDAO.findAllWithCriteria(criteres);
 		return ccRepository.findAllWithCriteria(criteres);
-		// return null;
 	}
 	
 	@Override
@@ -116,12 +121,27 @@ public class DemandeServiceImpl implements DemandeService {
 	}
 	
 	@Override
+	public Demande closeDemande(String num) throws Exception {
+		Optional<Demande> optDemande = demandeDAO.findByNumero(num);
+		Optional<Statut> optStatut = statutDAO.findByLibelle("CLOTUREE");
+		if(optDemande.isPresent() && optStatut.isPresent()) {
+			Demande demandeInBase = optDemande.get();
+			demandeInBase.setDateCloture(LocalDate.now());
+			demandeInBase.setStatut(optStatut.get());
+			
+			ChangementStatut cs = new ChangementStatut(LocalDate.now(), optStatut.get(), optDemande.get(), optDemande.get().getResponsable());
+			cgtStatutDAO.saveAndFlush(cs);
+			
+			return demandeDAO.saveAndFlush(demandeInBase);
+		} else throw new Exception();	
+	}
+	
+	@Override
 	public void delete(String num) throws Exception {
 		Optional<Demande> optDemande = demandeDAO.findByNumero(num);
 		if(optDemande.isPresent()) {
 			demandeDAO.deleteById(optDemande.get().getId());
 		}
-		
 	}
 
 	
@@ -167,7 +187,7 @@ public class DemandeServiceImpl implements DemandeService {
 										demandeDTO.getObjet(), 
 										LocalDate.now(), 
 										dateEcheance, 
-										new ArrayList<AttachedDocument>(),//demandeDTO.getListeDocuments(), 
+										new ArrayList<AttachedDocument>(), 
 										type,
 										optOrigine.get(),
 										optStatut.get(),
@@ -184,15 +204,24 @@ public class DemandeServiceImpl implements DemandeService {
 		numeroDemande += nature;
 		numeroDemande += year;
 		
-		incrementNumBase++;
-		System.out.println("incrementNumBase = " + incrementNumBase);
+		List<Demande> allDemandesOfSameNature = this.ccRepository.findAllWithNature(nature);
+		Long max = 0L;
+		for(Demande demande : allDemandesOfSameNature) {
+			System.out.println("Fin du numéro de cette demande : " + demande.getNumero().substring(4));
+			if((Long.parseLong(demande.getNumero().substring(4))) > max) {
+				max = Long.parseLong(demande.getNumero().substring(4));
+				System.out.println("new value of max = " + max);
+			}	
+		}
 		
-		int numBaseDigits = (int) (Math.log10(incrementNumBase) +1);
+		max++;
+		System.out.println("last value of max = " + max);
 		
-		for(int i=0; i < (4 - numBaseDigits); i++) {
+		String numerator = max.toString();
+		for(int i=0; i < (4 - numerator.length()); i++) {
 			numeroDemande += "0";
 		}
-		numeroDemande += incrementNumBase.toString();
+		numeroDemande += numerator;
 		
 		System.out.println("current value of numeroDemande = " + numeroDemande);
 		return numeroDemande;
@@ -212,7 +241,7 @@ public class DemandeServiceImpl implements DemandeService {
 						
 				} 
 			} catch (IOException e) {
-				// TODO: handle exception
+				throw new Exception ("Erreur de lecture / ecriture");
 				
 			}
 			demandeDAO.saveAndFlush(demandeConcernee);
@@ -225,19 +254,30 @@ public class DemandeServiceImpl implements DemandeService {
 
 	@Override
 	public Demande RemoveAttachedDocuments(Demande demandeToSlim) {
-		demandeToSlim.getListeDocuments().clear();
+		if(demandeToSlim.getListeDocuments().size() != 0) {
+			demandeToSlim.getListeDocuments().clear();
+			demandeToSlim.getListeDocuments().add(new AttachedDocument());
+		}
 		return demandeToSlim;
 	}
-
+	
+	/**
+	 * 
+	 */
 	@Override
 	public Demande assign(String numero, String idrh) throws Exception {
 		Demande demande = this.findByNumero(numero);
 		System.out.println("Demande found : " + demande);
 		Optional<Utilisateur> optUtilisateur = utilisateurDAO.findByIdentifiantRH(idrh);
-		if(optUtilisateur.isPresent()) {
+		Optional<Statut> optStatut = statutDAO.findByLibelle("ATTRIBUEE");
+		if(optUtilisateur.isPresent() && optStatut.isPresent()) {
 			System.out.println("Gestionnaire found : " + optUtilisateur.get());
 			demande.setResponsable(optUtilisateur.get());
 			demande.setDateAttribution(LocalDate.now());
+			demande.setStatut(optStatut.get());
+			
+			ChangementStatut cs = new ChangementStatut(LocalDate.now(), optStatut.get(), demande, demande.getResponsable());
+			cgtStatutDAO.saveAndFlush(cs);
 		} else {
 			throw new Exception("idrh can't be found in database");
 		}
